@@ -2,71 +2,11 @@
   "name": "User",
   "type": "object",
   "properties": {
-    "role": {
-      "type": "string",
-      "description": "App role: user, admin or owner"
-    },
-    "sailing_role": {
-      "type": "string",
-      "enum": [
-        "helm",
-        "crew"
-      ],
-      "description": "Whether this sailor is a helm or crew"
-    },
-    "boat_name": {
-      "type": "string",
-      "description": "Name of the boat they sail on"
+    "notify_announcements": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this user wants a push notification when a new notice is posted"
     }
   },
-  "required": [
-    "role"
-  ],
-  "rls": {
-    "list": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "owner"
-          }
-        }
-      ]
-    },
-    "read": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "owner"
-          }
-        }
-      ]
-    },
-    "update": {
-      "$or": [
-        {
-          "id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "owner"
-          }
-        }
-      ]
-    }
-  }
+  "required": []
 }
