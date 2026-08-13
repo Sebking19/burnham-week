@@ -3,6 +3,9 @@ import { useAuth } from "@/lib/AuthContext";
 import { useEffect } from "react";
 import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 import { loadSettings, applySettings } from "@/lib/accessibility";
+import BackButton from "@/components/BackButton";
+
+const SUB_PAGES = ["Profile", "Help", "Settings", "PrivacyPolicy"];
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },
@@ -36,7 +39,8 @@ export default function Layout({ children, currentPageName }) {
       {isAuthenticated && (
         <header className="fixed top-0 left-0 right-0 z-40 bg-white" style={{ paddingTop: "env(safe-area-inset-top)" }}>
           <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40">
-            <Link to="/" className="flex items-center gap-3">
+            {SUB_PAGES.includes(currentPageName) && <BackButton />}
+            <Link to="/" className="flex items-center gap-3 flex-1 min-w-0">
               <img
                 src="https://www.burnhamweek.com/wp-content/themes/burnham-week-2026/img/burnham-week-logo-2026.png"
                 alt="Burnham Week 2026"

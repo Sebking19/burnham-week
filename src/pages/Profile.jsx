@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { LogOut, Check } from "lucide-react";
+import DeleteAccountDialog from "@/components/profile/DeleteAccountDialog";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -82,6 +83,8 @@ export default function Profile() {
       >
         <LogOut size={24} /> Sign out
       </button>
+
+      <DeleteAccountDialog user={user} />
     </div>
   );
 }

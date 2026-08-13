@@ -46,8 +46,8 @@ export default function PullToRefreshIndicator({ pullY, refreshing }) {
             className="flex justify-center mb-2"
             style={{ transform: `translateY(${pullY - 10}px)` }}
           >
-            <div className={`flex items-center gap-2 text-white/40 text-xs ${pullY > 50 ? "text-blue-400" : ""}`}>
-              <RefreshCw size={14} className={`transition-transform ${pullY > 50 ? "rotate-180 text-blue-400" : ""}`} />
+            <div className={`flex items-center gap-2 text-base ${pullY > 50 ? "text-[#4C7CF0] font-bold" : "text-[#141B34]/60"}`}>
+              <RefreshCw size={16} className={`transition-transform ${pullY > 50 ? "rotate-180 text-[#4C7CF0]" : ""}`} />
               {pullY > 50 ? "Release to refresh" : "Pull to refresh"}
             </div>
           </motion.div>
@@ -55,7 +55,7 @@ export default function PullToRefreshIndicator({ pullY, refreshing }) {
       </AnimatePresence>
       {refreshing && (
         <div className="flex justify-center mb-3">
-          <RefreshCw size={14} className="text-blue-400 animate-spin" />
+          <RefreshCw size={16} className="text-[#4C7CF0] animate-spin" />
         </div>
       )}
     </>

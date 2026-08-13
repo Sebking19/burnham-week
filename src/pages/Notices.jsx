@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import NoticeComposer from "@/components/notices/NoticeComposer";
+import PullToRefreshIndicator, { usePullToRefresh } from "@/components/PullToRefresh";
 
 export default function Notices() {
   const [notices, setNotices] = useState(null);
@@ -15,6 +16,8 @@ export default function Notices() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  const { pullY, refreshing, handleTouchStart, handleTouchMove, handleTouchEnd } = usePullToRefresh(load);
+
   const isAdmin = user && (user.role === "admin" || user.role === "owner");
 
   const handleDelete = async (id) => {
@@ -24,7 +27,13 @@ export default function Notices() {
   };
 
   return (
-    <div className="space-y-4">
+    <div
+      className="space-y-4"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <PullToRefreshIndicator pullY={pullY} refreshing={refreshing} />
       <div>
         <h1 className="text-3xl font-bold text-[#1B2A5B]">Notices</h1>
         <p className="text-lg text-slate-600 mt-1">Announcements from the organisers</p>

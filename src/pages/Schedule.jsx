@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Clock, MapPin, Pencil, Trash2, Plus } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import EventEditor from "@/components/schedule/EventEditor";
+import PullToRefreshIndicator, { usePullToRefresh } from "@/components/PullToRefresh";
 
 const DATES = [
   "2026-08-28", "2026-08-29", "2026-08-30", "2026-08-31",
@@ -21,6 +22,8 @@ export default function Schedule() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  const { pullY, refreshing, handleTouchStart, handleTouchMove, handleTouchEnd } = usePullToRefresh(load);
+
   const isAdmin = user && (user.role === "admin" || user.role === "owner");
   const today = format(new Date(), "yyyy-MM-dd");
 
@@ -31,7 +34,13 @@ export default function Schedule() {
   };
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <PullToRefreshIndicator pullY={pullY} refreshing={refreshing} />
       <div>
         <h1 className="text-3xl font-bold text-[#1B2A5B]">Week Schedule</h1>
         <p className="text-lg text-slate-600 mt-1">Burnham Week · 29 August – 5 September 2026</p>
