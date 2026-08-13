@@ -4,6 +4,7 @@ import AccessibilityOptions from "@/components/settings/AccessibilityOptions";
 import AdminMonitorPanel from "@/components/settings/AdminMonitorPanel";
 import UserRoleManager from "@/components/settings/UserRoleManager";
 import WebsiteSyncPanel from "@/components/settings/WebsiteSyncPanel";
+import NotificationPreferences from "@/components/settings/NotificationPreferences";
 import { Link } from "react-router-dom";
 import { ShieldQuestion } from "lucide-react";
 
@@ -24,6 +25,8 @@ export default function Settings() {
       </div>
 
       <AccessibilityOptions />
+
+      <NotificationPreferences />
 
       {isAdmin && <UserRoleManager currentUserId={user.id} />}
 

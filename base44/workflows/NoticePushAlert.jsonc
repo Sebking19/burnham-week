@@ -1,0 +1,42 @@
+{
+  "name": "Notice push alert",
+  "description": "When a new notice is posted, sends a phone push notification to everyone who has notices turned on",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Announcement",
+      "events": [
+        "create"
+      ]
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "notice_push_alert",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_push": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendAnnouncementPush",
+            "args": {
+              "announcement_id": "${ .trigger.entity_id }",
+              "title": "${ .trigger.data.title }",
+              "message": "${ .trigger.data.content }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send notice notification",
+            "description": "To everyone with notices switched on"
+          }
+        }
+      }
+    ]
+  }
+}
