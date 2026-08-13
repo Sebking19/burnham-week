@@ -7,7 +7,7 @@ import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "
 import { loadSettings, applySettings } from "@/lib/accessibility";
 import BackButton from "@/components/BackButton";
 
-const SUB_PAGES = ["Profile", "Help", "Settings", "PrivacyPolicy"];
+const SUB_PAGES = ["Profile", "Help", "Settings", "PrivacyPolicy", "MyResults"];
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },

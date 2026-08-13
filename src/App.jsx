@@ -11,6 +11,7 @@ import { NavigationStackProvider } from '@/lib/NavigationStackContext';
 
 // Code splitting with React.lazy
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
+const MyResults = React.lazy(() => import('./pages/MyResults'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -55,6 +56,15 @@ const AuthenticatedApp = () => {
             </Suspense>
           </LayoutWrapper>
         } />
+        {isAuthenticated && (
+          <Route path="/MyResults" element={
+            <LayoutWrapper currentPageName="MyResults">
+              <Suspense fallback={<PageLoader />}>
+                <MyResults />
+              </Suspense>
+            </LayoutWrapper>
+          } />
+        )}
         {isAuthenticated && Object.entries(Pages).map(([path, Page]) => (
           <Route
             key={path}

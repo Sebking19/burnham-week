@@ -1,6 +1,6 @@
 {
   "name": "Race day fast sync",
-  "description": "During Burnham Week race days, refreshes official website content every 15 minutes from 3pm to midnight \u2014 the window when each day's results and notices are published",
+  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight \u2014 the window when each day's results and notices are published",
   "trigger": {
     "condition": null,
     "config": {
@@ -33,10 +33,26 @@
             "function_name": "syncBurnhamSite",
             "args": {}
           },
-          "then": "end",
+          "then": "sync_results",
           "x-base44": {
             "title": "Refresh website content",
             "description": "Every 15 min on race evenings"
+          }
+        }
+      },
+      {
+        "sync_results": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncRaceResults",
+            "args": {
+              "limit": 10
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh race standings",
+            "description": "Pulls the Sailwave standings tables so members can see their own results"
           }
         }
       }

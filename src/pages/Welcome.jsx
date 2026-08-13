@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
-import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, UserCircle2 } from "lucide-react";
+import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, Trophy, UserCircle2 } from "lucide-react";
 import NoticeBoardCard from "@/components/home/NoticeBoardCard";
 import LatestNews from "@/components/home/LatestNews";
 import NameReminder from "@/components/home/NameReminder";
@@ -27,6 +27,7 @@ const links = [
   { to: "/Schedule", icon: CalendarDays, title: "Week Schedule", desc: "What's on each day, 29 August to 5 September" },
   { to: "/Forecast", icon: CloudSun, title: "Weather, Wind & Tides", desc: "Forecast for the River Crouch" },
   { to: "/Notices", icon: Megaphone, title: "Notices", desc: "Announcements from the organisers" },
+  { to: "/MyResults", icon: Trophy, title: "My Results", desc: "Your place in the standings, found by your name" },
   { to: "/Profile", icon: UserCircle2, title: "My Profile", desc: "Your name, boat and helm or crew role" },
   { to: "/Help", icon: LifeBuoy, title: "Help", desc: "Who to call if you need a hand" },
   { to: "/Settings", icon: Cog, title: "Settings", desc: "Text size and accessibility options" },
