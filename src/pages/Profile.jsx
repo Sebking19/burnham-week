@@ -7,6 +7,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [sailingRole, setSailingRole] = useState("");
   const [boatName, setBoatName] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -15,12 +16,17 @@ export default function Profile() {
       setUser(u);
       setSailingRole(u.sailing_role || "");
       setBoatName(u.boat_name || "");
+      setDisplayName(u.display_name || u.full_name || "");
     }).catch(() => {});
   }, []);
 
   const save = async () => {
     setSaving(true);
-    await base44.auth.updateMe({ sailing_role: sailingRole || null, boat_name: boatName.trim() });
+    await base44.auth.updateMe({
+      sailing_role: sailingRole || null,
+      boat_name: boatName.trim(),
+      display_name: displayName.trim(),
+    });
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
@@ -49,6 +55,17 @@ export default function Profile() {
         <h1 className="text-3xl font-bold text-[#0E2A4E] dark:text-[#8FAEF7]">My Profile</h1>
         <p className="text-lg text-slate-600 dark:text-white/70 mt-1">{user.full_name} · {user.email}</p>
         {isAdmin && <p className="inline-block mt-2 bg-amber-300 text-[#0E2A4E] text-base font-bold px-3 py-1 rounded-xl">Organiser (Admin)</p>}
+      </div>
+
+      <div className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-5 space-y-3">
+        <h2 className="text-xl font-bold text-[#0E2A4E] dark:text-[#8FAEF7]">My name</h2>
+        <p className="text-base text-slate-600 dark:text-white/70">Use the official name you entered Burnham Week under.</p>
+        <input
+          value={displayName}
+          onChange={e => setDisplayName(e.target.value)}
+          placeholder="e.g. John Smith"
+          className="w-full text-lg border-2 border-slate-300 dark:border-white/15 dark:bg-[#121212] dark:text-white rounded-xl px-4 py-3 focus:border-[#0E2A4E] outline-none"
+        />
       </div>
 
       <div className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-5 space-y-3">

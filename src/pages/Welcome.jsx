@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, UserCircle2 } from "lucide-react";
 import NoticeBoardCard from "@/components/home/NoticeBoardCard";
 import LatestNews from "@/components/home/LatestNews";
+import NameReminder from "@/components/home/NameReminder";
 
 const WEEK_START = new Date("2026-08-29T00:00:00");
 const WEEK_END = new Date("2026-09-05T23:59:59");
@@ -41,10 +42,14 @@ const OFFICE_TIMES = [
 export default function Welcome() {
   const { isAuthenticated } = useAuth();
   const [firstName, setFirstName] = useState("");
+  const [needsName, setNeedsName] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    base44.auth.me().then(u => setFirstName((u.full_name || "").split(" ")[0])).catch(() => {});
+    base44.auth.me().then(u => {
+      setFirstName(((u.display_name || u.full_name || "").split(" ")[0]));
+      setNeedsName(!u.display_name);
+    }).catch(() => {});
   }, [isAuthenticated]);
 
   if (!isAuthenticated) {
@@ -84,6 +89,8 @@ export default function Welcome() {
           Enter here
         </a>
       </div>
+
+      {needsName && <NameReminder />}
 
       <NoticeBoardCard />
 
