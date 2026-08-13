@@ -1,0 +1,95 @@
+{
+  "name": "SiteContent",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "enum": [
+        "news",
+        "fleets",
+        "documents",
+        "courses",
+        "sponsors",
+        "social"
+      ],
+      "description": "Which block of website content this record holds"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Page on burnhamweek.com the content came from"
+    },
+    "items": {
+      "type": "array",
+      "description": "Scraped items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fetched_at": {
+      "type": "string",
+      "description": "ISO timestamp of the last successful fetch"
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    }
+  }
+}

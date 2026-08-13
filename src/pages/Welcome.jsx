@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
 import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, UserCircle2 } from "lucide-react";
+import NoticeBoardCard from "@/components/home/NoticeBoardCard";
+import LatestNews from "@/components/home/LatestNews";
 
 const WEEK_START = new Date("2026-08-29T00:00:00");
 const WEEK_END = new Date("2026-09-05T23:59:59");
@@ -83,6 +85,8 @@ export default function Welcome() {
         </a>
       </div>
 
+      <NoticeBoardCard />
+
       {/* Links as ruled rows */}
       <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl px-5 py-2">
         {links.map(({ to, icon: Icon, title, desc }, i) => (
@@ -119,8 +123,10 @@ export default function Welcome() {
         </div>
       </div>
 
+      <LatestNews />
+
       <p className="text-base text-[#141B34]/60 dark:text-white/60 mt-8">
-        Organised by the Joint Clubs Committee: Royal Corinthian YC, Royal Burnham YC, Crouch YC and Burnham SC.
+        Organised by the Joint Clubs Committee: Royal Corinthian YC, Royal Burnham YC and Burnham SC.
       </p>
     </div>
   );

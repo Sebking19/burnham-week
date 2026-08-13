@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import AccessibilityOptions from "@/components/settings/AccessibilityOptions";
 import AdminMonitorPanel from "@/components/settings/AdminMonitorPanel";
 import UserRoleManager from "@/components/settings/UserRoleManager";
+import WebsiteSyncPanel from "@/components/settings/WebsiteSyncPanel";
 import { Link } from "react-router-dom";
 import { ShieldQuestion } from "lucide-react";
 
@@ -27,6 +28,8 @@ export default function Settings() {
       {isAdmin && <UserRoleManager currentUserId={user.id} />}
 
       {isAdmin && <AdminMonitorPanel />}
+
+      {isAdmin && <WebsiteSyncPanel />}
 
       <Link
         to="/PrivacyPolicy"

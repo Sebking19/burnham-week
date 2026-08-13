@@ -1,14 +1,47 @@
+import { Award, BarChart3, Mail, Receipt, Users } from "lucide-react";
 import InfoSection from "@/components/info/InfoSection";
-import DocumentLinks from "@/components/info/DocumentLinks";
+import LiveDocuments from "@/components/info/LiveDocuments";
+import FleetList from "@/components/info/FleetList";
+import LinkRow from "@/components/info/LinkRow";
+import CoursesCard from "@/components/info/CoursesCard";
+import SocialProgramme from "@/components/info/SocialProgramme";
+import SponsorGrid from "@/components/info/SponsorGrid";
 
 export default function Info() {
   return (
     <div>
-      <h1 className="font-display text-3xl mb-1 text-[#1B2A5B]">Information</h1>
-      <p className="text-[#141B34]/70 mb-6">Burnham Week 2026 · Sat 29 Aug – Sun 5 Sep</p>
+      <h1 className="font-display text-3xl mb-1 text-[#1B2A5B] dark:text-[#8FAEF7]">Information</h1>
+      <p className="text-[#141B34]/70 dark:text-white/70 mb-6">Burnham Week 2026 · Sat 29 Aug – Sun 5 Sep</p>
 
-      <InfoSection title="Racing Documents & Notice Board">
-        <DocumentLinks />
+      <InfoSection title="Notice Board Documents">
+        <LiveDocuments />
+      </InfoSection>
+
+      <InfoSection title="Courses">
+        <CoursesCard />
+      </InfoSection>
+
+      <InfoSection title="Social Programme">
+        <SocialProgramme />
+      </InfoSection>
+
+      <InfoSection title="Results & Standings">
+        <LinkRow label="Race results" url="https://www.burnhamweek.com/race-results/" icon={BarChart3} />
+        <LinkRow label="The Town Cup" url="https://www.burnhamweek.com/town-cup/" icon={Award} />
+      </InfoSection>
+
+      <InfoSection title="Racing Classes">
+        <FleetList />
+      </InfoSection>
+
+      <InfoSection title="Our Sponsors">
+        <SponsorGrid />
+      </InfoSection>
+
+      <InfoSection title="Visitors & Contact">
+        <LinkRow label="Visitor information" url="https://www.burnhamweek.com/visitors/" icon={Users} />
+        <LinkRow label="Entry fees 2026" url="https://www.burnhamweek.com/wp-content/uploads/2026/08/Burnham-Week-2026-Entry-Fees.pdf" icon={Receipt} />
+        <LinkRow label="Get in touch with the organisers" url="https://www.burnhamweek.com/get-in-touch/" icon={Mail} />
       </InfoSection>
 
       <InfoSection title="Watching the Racing">
@@ -67,7 +100,7 @@ export default function Info() {
         </a>
       </InfoSection>
 
-      <p className="text-sm text-[#141B34]/60 mb-4">
+      <p className="text-sm text-[#141B34]/60 dark:text-white/60 mb-4">
         Information sourced from burnhamweek.com. Always check the official notice board for the
         latest changes.
       </p>
