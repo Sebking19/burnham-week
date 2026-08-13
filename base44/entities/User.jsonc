@@ -6,6 +6,11 @@
       "type": "boolean",
       "default": true,
       "description": "Whether this user wants a push notification when a new notice is posted"
+    },
+    "notify_results": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this user wants a push notification when new race results are published"
     }
   },
   "required": []

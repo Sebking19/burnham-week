@@ -1,6 +1,6 @@
 {
   "name": "Race day fast sync",
-  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight \u2014 the window when each day's results and notices are published",
+  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight, and notifies members when new results appear",
   "trigger": {
     "condition": null,
     "config": {
@@ -49,10 +49,44 @@
               "limit": 10
             }
           },
-          "then": "end",
+          "then": "check_for_new_results",
           "x-base44": {
             "title": "Refresh race standings",
             "description": "Pulls the Sailwave standings tables so members can see their own results"
+          }
+        }
+      },
+      {
+        "check_for_new_results": {
+          "switch": [
+            {
+              "when": "${ (.sync_results.changed_count // 0) > 0 }",
+              "then": "notify_results"
+            },
+            {
+              "when": "${ true }",
+              "then": "end"
+            }
+          ],
+          "x-base44": {
+            "title": "Anything new?",
+            "description": "Only notify when standings actually changed"
+          }
+        }
+      },
+      {
+        "notify_results": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendResultsPush",
+            "args": {
+              "classes": "${ .sync_results.changed_classes }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Notify members",
+            "description": "Push notification about the new results"
           }
         }
       }

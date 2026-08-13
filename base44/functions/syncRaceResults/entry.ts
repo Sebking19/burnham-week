@@ -63,12 +63,16 @@ async function syncOne(base44, entry) {
     fetched_at: new Date().toISOString(),
   };
   const existing = await base44.asServiceRole.entities.RaceResult.filter({ source_url: entry.url });
+  let changed;
   if (existing.length) {
+    // Compare standings only — fetched_at always differs.
+    changed = JSON.stringify(existing[0].rows || []) !== JSON.stringify(rows);
     await base44.asServiceRole.entities.RaceResult.update(existing[0].id, data);
   } else {
+    changed = rows.length > 0;
     await base44.asServiceRole.entities.RaceResult.create(data);
   }
-  return rows.length;
+  return { count: rows.length, changed };
 }
 
 export default async function (req: Request): Promise<Response> {
@@ -106,15 +110,25 @@ export default async function (req: Request): Promise<Response> {
     entries.sort((a, b) => (stamp[a.url] || '').localeCompare(stamp[b.url] || ''));
 
     const results = {};
+    const changedClasses = [];
     for (const entry of entries.slice(0, limit)) {
       try {
-        results[entry.title] = await syncOne(base44, entry);
+        const outcome = await syncOne(base44, entry);
+        results[entry.title] = outcome.count;
+        if (outcome.changed) changedClasses.push(entry.title);
       } catch (err) {
         results[entry.title] = `failed: ${err.message}`;
       }
     }
 
-    return Response.json({ ok: true, published: true, total_pages: entries.length, results });
+    return Response.json({
+      ok: true,
+      published: true,
+      total_pages: entries.length,
+      results,
+      changed_classes: changedClasses,
+      changed_count: changedClasses.length,
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
