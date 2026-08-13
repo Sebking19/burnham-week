@@ -18,8 +18,8 @@ export default function Settings() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-3xl text-[#1B2A5B]">Settings</h1>
-        <p className="text-lg text-[#141B34]/70 mt-1">Make the app easier to read and use</p>
+        <h1 className="font-display text-3xl text-[#1B2A5B] dark:text-[#8FAEF7]">Settings</h1>
+        <p className="text-lg text-[#141B34]/70 dark:text-white/70 mt-1">Make the app easier to read and use</p>
       </div>
 
       <AccessibilityOptions />
@@ -30,10 +30,10 @@ export default function Settings() {
 
       <Link
         to="/PrivacyPolicy"
-        className="flex items-center gap-3 bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-5 hover:bg-[#F4F7FC]"
+        className="flex items-center gap-3 bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-5 hover:bg-[#F4F7FC] dark:hover:bg-white/5"
       >
         <ShieldQuestion size={24} className="text-[#4C7CF0]" />
-        <span className="text-lg font-bold text-[#1B2A5B]">Privacy Policy</span>
+        <span className="text-lg font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">Privacy Policy</span>
       </Link>
     </div>
   );

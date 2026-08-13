@@ -20,7 +20,7 @@ const tabs = [
 export default function Layout({ children, currentPageName }) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { activeTab, setActiveTab, pushPage, resetTab, saveScrollPosition, getScrollPosition } = useNavigationStack();
+  const { activeTab, setActiveTab, pushPage, resetTab, saveScrollPosition, getScrollPosition, stacks, getCurrentPath } = useNavigationStack();
   const prevTab = useRef(activeTab);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#141B34]">
+    <div className="min-h-screen bg-white text-[#141B34] dark:bg-[#121212] dark:text-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap');
         * { font-family: 'Source Sans 3', sans-serif; }
@@ -70,8 +70,8 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {isAuthenticated && (
-        <header className="fixed top-0 left-0 right-0 z-40 bg-white" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-          <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40">
+        <header className="fixed top-0 left-0 right-0 z-40 bg-white dark:bg-[#121212]" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+          <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40 dark:border-white/10">
             {SUB_PAGES.includes(currentPageName) && <BackButton />}
             <Link to="/" className="flex items-center gap-3 flex-1 min-w-0">
               <img
@@ -80,8 +80,8 @@ export default function Layout({ children, currentPageName }) {
                 className="h-14 w-auto shrink-0 object-contain"
               />
               <div className="leading-tight">
-                <p className="font-display text-2xl text-[#1B2A5B]">Burnham Week</p>
-                <p className="text-[0.8rem] text-[#141B34]/70">Sat 29 Aug – Sun 5 Sep 2026</p>
+                <p className="font-display text-2xl text-[#1B2A5B] dark:text-[#8FAEF7]">Burnham Week</p>
+                <p className="text-[0.8rem] text-[#141B34]/70 dark:text-white/70">Sat 29 Aug – Sun 5 Sep 2026</p>
               </div>
             </Link>
             <Link
@@ -95,7 +95,10 @@ export default function Layout({ children, currentPageName }) {
         </header>
       )}
 
-      <main className={`max-w-3xl mx-auto px-4 overflow-x-hidden ${isAuthenticated ? "pt-28 pb-32" : "pt-0 pb-0"}`}>
+      <main
+        className={`max-w-3xl mx-auto px-4 overflow-x-hidden ${isAuthenticated ? "pb-32" : "pb-0"}`}
+        style={isAuthenticated ? { paddingTop: "calc(6.5rem + env(safe-area-inset-top))" } : undefined}
+      >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={currentPageName || "root"}
@@ -111,18 +114,20 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {isAuthenticated && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-dotted border-[#141B34]/40" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-dotted border-[#141B34]/40 dark:bg-[#121212] dark:border-white/10" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
           <div className="max-w-3xl mx-auto h-[74px] flex items-stretch">
             {tabs.map(({ name, icon: Icon, page, path }) => {
               const active = currentPageName === page || (page === "Welcome" && !currentPageName);
+              // Resume the tab where the user left it (deepest page in its stack)
+              const tabPath = (stacks[page] || []).length > 1 ? getCurrentPath(page) : path;
               return (
                 <Link
                   key={page}
-                  to={path}
+                  to={tabPath}
                   onClick={() => handleTabClick({ page, path })}
                   className="flex-1 flex items-center justify-center px-1"
                 >
-                  <span className={`flex items-center gap-2 px-3 py-2.5 rounded-lg ${active ? "bg-[#4C7CF0] text-white font-bold" : "text-[#1B2A5B] hover:bg-[#4C7CF0]/10"}`}>
+                  <span className={`flex items-center gap-2 px-3 py-2.5 rounded-lg ${active ? "bg-[#4C7CF0] text-white font-bold" : "text-[#1B2A5B] dark:text-[#8FAEF7] hover:bg-[#4C7CF0]/10"}`}>
                     <Icon size={22} strokeWidth={active ? 2.4 : 2} />
                     <span className="text-base hidden sm:inline">{name}</span>
                   </span>

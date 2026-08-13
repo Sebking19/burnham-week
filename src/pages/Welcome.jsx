@@ -84,34 +84,34 @@ export default function Welcome() {
       </div>
 
       {/* Links as ruled rows */}
-      <div className="bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl px-5 py-2">
+      <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl px-5 py-2">
         {links.map(({ to, icon: Icon, title, desc }, i) => (
           <Link
             key={to}
             to={to}
-            className={`flex items-center gap-4 py-4 group ${i < links.length - 1 ? "border-b border-[#141B34]/10" : ""}`}
+            className={`flex items-center gap-4 py-4 group ${i < links.length - 1 ? "border-b border-[#141B34]/10 dark:border-white/10" : ""}`}
           >
             <span className="w-11 h-11 rounded-lg bg-[#4C7CF0] flex items-center justify-center shrink-0">
               <Icon size={22} className="text-white" />
             </span>
             <span className="text-lg leading-snug">
-              <span className="font-bold text-[#1B2A5B] group-hover:underline">{title}</span>
-              <span className="text-[#141B34]/70"> — {desc}</span>
+              <span className="font-bold text-[#1B2A5B] dark:text-[#8FAEF7] group-hover:underline">{title}</span>
+              <span className="text-[#141B34]/70 dark:text-white/70"> — {desc}</span>
             </span>
           </Link>
         ))}
       </div>
 
       {/* Office times */}
-      <div className="mt-6 bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-6">
-        <h2 className="font-display text-2xl text-[#1B2A5B]">Office Opening Times 2026</h2>
+      <div className="mt-6 bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-6">
+        <h2 className="font-display text-2xl text-[#1B2A5B] dark:text-[#8FAEF7]">Office Opening Times 2026</h2>
         <div className="mt-4">
-          <div className="flex justify-between gap-4 pb-2 text-base font-bold text-[#1B2A5B]">
+          <div className="flex justify-between gap-4 pb-2 text-base font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">
             <span>Date</span>
             <span>Times</span>
           </div>
           {OFFICE_TIMES.map(([day, time], i) => (
-            <div key={day} className={`flex justify-between gap-4 py-3 px-2 -mx-2 text-lg text-[#141B34]/85 ${i % 2 === 0 ? "bg-[#F4F7FC]" : ""}`}>
+            <div key={day} className={`flex justify-between gap-4 py-3 px-2 -mx-2 text-lg text-[#141B34]/85 dark:text-white/85 ${i % 2 === 0 ? "bg-[#F4F7FC] dark:bg-white/5" : ""}`}>
               <span>{day}</span>
               <span>{time}</span>
             </div>
@@ -119,7 +119,7 @@ export default function Welcome() {
         </div>
       </div>
 
-      <p className="text-base text-[#141B34]/60 mt-8">
+      <p className="text-base text-[#141B34]/60 dark:text-white/60 mt-8">
         Organised by the Joint Clubs Committee: Royal Corinthian YC, Royal Burnham YC, Crouch YC and Burnham SC.
       </p>
     </div>

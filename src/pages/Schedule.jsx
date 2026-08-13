@@ -42,12 +42,12 @@ export default function Schedule() {
     >
       <PullToRefreshIndicator pullY={pullY} refreshing={refreshing} />
       <div>
-        <h1 className="text-3xl font-bold text-[#1B2A5B]">Week Schedule</h1>
-        <p className="text-lg text-slate-600 mt-1">Burnham Week · 29 August – 5 September 2026</p>
+        <h1 className="text-3xl font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">Week Schedule</h1>
+        <p className="text-lg text-slate-600 dark:text-white/70 mt-1">Burnham Week · 29 August – 5 September 2026</p>
       </div>
 
       {events === null ? (
-        <div className="bg-white border-2 border-slate-200 rounded-2xl p-6 flex items-center gap-3 text-lg text-slate-600">
+        <div className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-6 flex items-center gap-3 text-lg text-slate-600">
           <div className="w-6 h-6 border-4 border-slate-200 border-t-[#1B2A5B] rounded-full animate-spin" />
           Loading the schedule...
         </div>
@@ -60,7 +60,7 @@ export default function Schedule() {
           return (
             <div key={date}>
               <div className="flex items-center justify-between mb-2">
-                <h2 className={`text-xl font-bold ${isToday ? "text-white bg-[#1B2A5B] px-3 py-1 rounded-xl" : "text-[#1B2A5B]"}`}>
+                <h2 className={`text-xl font-bold ${isToday ? "text-white bg-[#1B2A5B] px-3 py-1 rounded-xl" : "text-[#1B2A5B] dark:text-[#8FAEF7]"}`}>
                   {format(parseISO(date), "EEEE d MMMM")}{isToday ? " — Today" : ""}
                 </h2>
                 {isAdmin && (
@@ -74,13 +74,13 @@ export default function Schedule() {
                 )}
               </div>
               {dayEvents.length === 0 ? (
-                <p className="text-lg text-slate-500 bg-white border-2 border-slate-200 rounded-2xl px-4 py-3">Nothing scheduled yet.</p>
+                <p className="text-lg text-slate-500 dark:text-white/50 bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3">Nothing scheduled yet.</p>
               ) : (
                 <div className="space-y-3">
                   {dayEvents.map(ev => (
-                    <div key={ev.id} className="bg-white border-2 border-slate-200 rounded-2xl p-4">
+                    <div key={ev.id} className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-4">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-xl font-bold text-slate-900">{ev.title}</p>
+                        <p className="text-xl font-bold text-slate-900 dark:text-white">{ev.title}</p>
                         {isAdmin && (
                           <div className="flex gap-1 shrink-0">
                             <button onClick={() => setEditing({ date, event: ev })} aria-label="Edit event" className="p-2 rounded-xl text-slate-400 hover:text-[#1B2A5B] hover:bg-slate-100">
@@ -92,11 +92,11 @@ export default function Schedule() {
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-wrap gap-x-5 gap-y-1 mt-1 text-lg text-slate-700">
+                      <div className="flex flex-wrap gap-x-5 gap-y-1 mt-1 text-lg text-slate-700 dark:text-white/80">
                         {ev.time && <span className="flex items-center gap-1.5"><Clock size={20} className="text-[#1B2A5B]" />{ev.time}</span>}
                         {ev.location && <span className="flex items-center gap-1.5"><MapPin size={20} className="text-[#1B2A5B]" />{ev.location}</span>}
                       </div>
-                      {ev.details && <p className="text-lg text-slate-600 mt-2">{ev.details}</p>}
+                      {ev.details && <p className="text-lg text-slate-600 dark:text-white/70 mt-2">{ev.details}</p>}
                     </div>
                   ))}
                 </div>
