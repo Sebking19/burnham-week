@@ -3,6 +3,7 @@ import Schedule from './pages/Schedule';
 import Forecast from './pages/Forecast';
 import Notices from './pages/Notices';
 import Profile from './pages/Profile';
+import Info from './pages/Info';
 import __Layout from './Layout.jsx';
 
 export const PAGES = {
@@ -11,6 +12,7 @@ export const PAGES = {
     "Forecast": Forecast,
     "Notices": Notices,
     "Profile": Profile,
+    "Info": Info,
 }
 
 export const pagesConfig = {

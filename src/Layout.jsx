@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { Anchor, CalendarDays, CloudSun, FileText, Home as HomeIcon, User } from "lucide-react";
+import { Anchor, CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },
   { name: "Schedule", icon: CalendarDays, page: "Schedule", path: "/Schedule" },
   { name: "Weather", icon: CloudSun, page: "Forecast", path: "/Forecast" },
   { name: "Notices", icon: FileText, page: "Notices", path: "/Notices" },
+  { name: "Info", icon: Info, page: "Info", path: "/Info" },
 ];
 
 export default function Layout({ children, currentPageName }) {
