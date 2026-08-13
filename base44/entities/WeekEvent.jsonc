@@ -1,43 +1,33 @@
 {
-  "name": "User",
+  "name": "WeekEvent",
   "type": "object",
   "properties": {
-    "role": {
+    "date": {
       "type": "string",
-      "description": "App role: user, admin or owner"
+      "format": "date",
+      "description": "Day of Burnham Week 2026 this event happens on"
     },
-    "sailing_role": {
+    "time": {
       "type": "string",
-      "enum": [
-        "helm",
-        "crew"
-      ],
-      "description": "Whether this sailor is a helm or crew"
+      "description": "Start time or time range, e.g. '10:00' or '15:00 - 20:00'"
     },
-    "boat_name": {
-      "type": "string",
-      "description": "Name of the boat they sail on"
+    "title": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
     }
   },
   "required": [
-    "role"
+    "date",
+    "title"
   ],
   "rls": {
-    "list": {
-      "$or": [
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        },
-        {
-          "user_condition": {
-            "role": "owner"
-          }
-        }
-      ]
-    },
-    "read": {
+    "read": true,
+    "create": {
       "$or": [
         {
           "user_condition": {
@@ -54,8 +44,19 @@
     "update": {
       "$or": [
         {
-          "id": "{{user.id}}"
+          "user_condition": {
+            "role": "admin"
+          }
         },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
         {
           "user_condition": {
             "role": "admin"

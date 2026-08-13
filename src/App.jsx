@@ -10,10 +10,6 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { NavigationStackProvider } from '@/lib/NavigationStackContext';
 
 // Code splitting with React.lazy
-const NominateTrophy = React.lazy(() => import('./pages/NominateTrophy'));
-const NominationQueue = React.lazy(() => import('./pages/NominationQueue'));
-const Sponsors = React.lazy(() => import('./pages/Sponsors'));
-const RolesGuide = React.lazy(() => import('./pages/RolesGuide'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 
 // Loading fallback component
@@ -72,38 +68,6 @@ const AuthenticatedApp = () => {
             }
           />
         ))}
-        {isAuthenticated && (
-          <>
-            <Route path="/NominateTrophy" element={
-              <LayoutWrapper currentPageName="NominateTrophy">
-                <Suspense fallback={<PageLoader />}>
-                  <NominateTrophy />
-                </Suspense>
-              </LayoutWrapper>
-            } />
-            <Route path="/Sponsors" element={
-              <LayoutWrapper currentPageName="Sponsors">
-                <Suspense fallback={<PageLoader />}>
-                  <Sponsors />
-                </Suspense>
-              </LayoutWrapper>
-            } />
-            <Route path="/RolesGuide" element={
-              <LayoutWrapper currentPageName="RolesGuide">
-                <Suspense fallback={<PageLoader />}>
-                  <RolesGuide />
-                </Suspense>
-              </LayoutWrapper>
-            } />
-            <Route path="/NominationQueue" element={
-              <LayoutWrapper currentPageName="NominationQueue">
-                <Suspense fallback={<PageLoader />}>
-                  <NominationQueue />
-                </Suspense>
-              </LayoutWrapper>
-            } />
-          </>
-        )}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Suspense>
