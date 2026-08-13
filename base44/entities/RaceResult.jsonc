@@ -1,0 +1,100 @@
+{
+  "name": "RaceResult",
+  "type": "object",
+  "properties": {
+    "class_name": {
+      "type": "string",
+      "description": "Class / series title as listed on the results page, e.g. 'Squib \u2013 Week's Points'"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Sailwave results page this standings table came from"
+    },
+    "rows": {
+      "type": "array",
+      "description": "Overall standings rows",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "string"
+          },
+          "sail_no": {
+            "type": "string"
+          },
+          "boat": {
+            "type": "string"
+          },
+          "club": {
+            "type": "string"
+          },
+          "helm": {
+            "type": "string"
+          },
+          "crew": {
+            "type": "string"
+          },
+          "nett": {
+            "type": "string"
+          },
+          "total": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fetched_at": {
+      "type": "string",
+      "description": "ISO timestamp of the last successful fetch"
+    }
+  },
+  "required": [
+    "class_name",
+    "source_url"
+  ],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    }
+  }
+}
