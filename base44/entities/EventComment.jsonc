@@ -1,0 +1,79 @@
+{
+  "name": "EventComment",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "ID of the event"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the commenter"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Display name of the commenter"
+    },
+    "content": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "reply_to_id": {
+      "type": "string",
+      "description": "ID of the comment being replied to (optional)"
+    }
+  },
+  "required": [
+    "event_id",
+    "user_email",
+    "content"
+  ],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        }
+      ]
+    }
+  }
+}

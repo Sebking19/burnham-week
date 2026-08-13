@@ -1,0 +1,143 @@
+{
+  "name": "Badge",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Badge/trophy name"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this badge is for"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji icon for the badge"
+    },
+    "color": {
+      "type": "string",
+      "description": "Accent colour hex"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "trophy",
+        "badge",
+        "medal"
+      ],
+      "default": "trophy"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "model_url": {
+      "type": "string",
+      "description": "URL of uploaded 3D model file (.glb)"
+    }
+  },
+  "required": [
+    "name",
+    "emoji"
+  ],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

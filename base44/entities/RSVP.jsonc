@@ -1,0 +1,99 @@
+{
+  "name": "RSVP",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "ID of the event"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user RSVPing"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "attending",
+        "not_attending",
+        "maybe"
+      ],
+      "description": "RSVP status"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user for display"
+    },
+    "checked_in": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the attendee has been checked in via QR scan"
+    },
+    "paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the attendee has completed payment"
+    },
+    "booking_reference": {
+      "type": "string",
+      "description": "Unique booking reference that groups related RSVPs together"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of spots reserved in this booking"
+    }
+  },
+  "required": [
+    "event_id",
+    "user_email",
+    "status"
+  ],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "name": "BadgeAward",
+  "type": "object",
+  "properties": {
+    "badge_id": {
+      "type": "string",
+      "description": "ID of the badge awarded"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of the recipient"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Display name of the recipient"
+    },
+    "awarded_by_name": {
+      "type": "string",
+      "description": "Name of the trainer/admin who awarded it"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional note or reason for the award"
+    },
+    "awarded_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the award was given"
+    },
+    "season": {
+      "type": "string",
+      "description": "Season/year label e.g. 2026"
+    }
+  },
+  "required": [
+    "badge_id",
+    "recipient_email",
+    "recipient_name",
+    "awarded_date"
+  ],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

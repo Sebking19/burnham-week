@@ -1,0 +1,101 @@
+{
+  "name": "CarWashBooking",
+  "type": "object",
+  "properties": {
+    "buyer_email": {
+      "type": "string",
+      "description": "Email of the person who booked"
+    },
+    "buyer_name": {
+      "type": "string",
+      "description": "Name of the buyer"
+    },
+    "registration": {
+      "type": "string",
+      "description": "Vehicle registration plate"
+    },
+    "car_size": {
+      "type": "string",
+      "enum": [
+        "small",
+        "large"
+      ],
+      "default": "small",
+      "description": "Size of the car (small \u00a35, large \u00a310)"
+    },
+    "paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether payment has been completed"
+    },
+    "done": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the car wash has been completed"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "buyer_email"
+  ],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.buyer_email": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "info": {
+      "type": "string",
+      "description": "Short description shown when the event is expanded"
+    },
+    "link": {
+      "type": "string",
+      "description": "Optional external link for more info"
+    },
+    "day": {
+      "type": "string",
+      "enum": [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Specific date for the event (YYYY-MM-DD)"
+    },
+    "time": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "Training",
+        "Event",
+        "Fun",
+        "Race",
+        "Game",
+        "Practice",
+        "Meeting",
+        "Other"
+      ],
+      "default": "Training"
+    },
+    "group": {
+      "type": "string",
+      "enum": [
+        "pond",
+        "river1",
+        "river2",
+        "race",
+        "cadets",
+        "fast",
+        "trainers",
+        "all"
+      ],
+      "default": "all"
+    },
+    "rsvp_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether RSVP is enabled for this event"
+    },
+    "payment_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether payment is required for this event"
+    },
+    "payment_amount": {
+      "type": "number",
+      "description": "Payment amount in pence (e.g. 500 = \u00a35.00)"
+    },
+    "recurrence_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly"
+      ],
+      "default": "none",
+      "description": "Type of recurrence for the event"
+    },
+    "recurrence_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the recurring event series ends"
+    },
+    "is_series_parent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a parent event of a recurring series"
+    },
+    "series_parent_id": {
+      "type": "string",
+      "description": "ID of the parent event if this is part of a series"
+    }
+  },
+  "required": [
+    "title",
+    "day",
+    "group",
+    "date"
+  ],
+  "rls": {
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

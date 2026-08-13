@@ -1,0 +1,120 @@
+{
+  "name": "VolunteerSignup",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the volunteer"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Display name of the volunteer"
+    },
+    "friday_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The Friday they are signing up to volunteer"
+    },
+    "role": {
+      "type": "string",
+      "description": "Volunteer task e.g. Launch Ribs, Safety Cover"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional note from the volunteer"
+    },
+    "confirmed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Confirmed by a trainer/admin"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "friday_date"
+  ],
+  "rls": {
+    "read": true,
+    "create": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}

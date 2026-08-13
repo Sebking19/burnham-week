@@ -1,0 +1,141 @@
+{
+  "name": "BoatWindConfig",
+  "type": "object",
+  "properties": {
+    "limits": {
+      "type": "object",
+      "description": "JSON map of boat name to wind thresholds (greenMax, yellowMax, redAbove)"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "name": "DutyAvailability",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the member"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Display name of the member"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "The Saturday date (YYYY-MM-DD)"
+    },
+    "available": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the member is available for duty on this date"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Duty roles the member has volunteered for (e.g. Beach, Safety Boat 1)"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional note (e.g. available from 10am)"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "date"
+  ],
+  "rls": {
+    "read": true,
+    "create": true,
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

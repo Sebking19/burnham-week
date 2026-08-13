@@ -1,0 +1,87 @@
+{
+  "name": "OtterWeekConfig",
+  "type": "object",
+  "properties": {
+    "tickets_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether ticket purchasing is open"
+    },
+    "show_otter_week": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the Otter Week ticket section is visible to all users"
+    },
+    "show_achievements": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the Achievements tab is visible to all users"
+    },
+    "show_otter_week_features": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether Otter Week tabs appear in Volunteering and Duty Roster pages"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": true,
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

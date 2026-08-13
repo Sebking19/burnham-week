@@ -1,0 +1,67 @@
+{
+  "name": "AnnouncementAck",
+  "type": "object",
+  "properties": {
+    "announcement_id": {
+      "type": "string",
+      "description": "ID of the acknowledged announcement"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who acknowledged"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Display name of the user"
+    }
+  },
+  "required": [
+    "announcement_id",
+    "user_email"
+  ],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}

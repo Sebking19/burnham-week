@@ -1,0 +1,25 @@
+{
+  "name": "OtterUsername",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "username": {
+      "type": "string",
+      "description": "Custom Otter username"
+    },
+    "avatar_emoji": {
+      "type": "string",
+      "description": "Chosen otter avatar emoji"
+    },
+    "avatar_color": {
+      "type": "string",
+      "description": "Chosen avatar accent colour (hex)"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

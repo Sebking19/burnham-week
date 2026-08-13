@@ -1,0 +1,156 @@
+{
+  "name": "TrophyNomination",
+  "type": "object",
+  "properties": {
+    "badge_id": {
+      "type": "string",
+      "description": "ID of the trophy being nominated for"
+    },
+    "nominee_email": {
+      "type": "string",
+      "description": "Email of the nominee"
+    },
+    "nominee_name": {
+      "type": "string",
+      "description": "Display name of the nominee"
+    },
+    "nominator_email": {
+      "type": "string",
+      "description": "Email of the person submitting the nomination"
+    },
+    "nominator_name": {
+      "type": "string",
+      "description": "Name of the nominator"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for the nomination"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Moderation status"
+    },
+    "decided_by": {
+      "type": "string",
+      "description": "Email of the admin who approved/declined"
+    },
+    "decided_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the nomination was approved/declined"
+    }
+  },
+  "required": [
+    "badge_id",
+    "nominee_email",
+    "nominee_name",
+    "nominator_email",
+    "reason"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "pond_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river1_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "river2_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "race_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "cadet_trainer"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "fast_trainer"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}

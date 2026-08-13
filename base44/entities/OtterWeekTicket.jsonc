@@ -1,0 +1,110 @@
+{
+  "name": "OtterWeekTicket",
+  "type": "object",
+  "properties": {
+    "buyer_email": {
+      "type": "string",
+      "description": "Email of the person who purchased"
+    },
+    "buyer_name": {
+      "type": "string",
+      "description": "Name of the buyer"
+    },
+    "ticket_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Each ticket with its type, full legal name, and price"
+    },
+    "ticket_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Legacy: Names assigned to each ticket"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Number of tickets purchased"
+    },
+    "total_paid": {
+      "type": "number",
+      "description": "Total amount paid"
+    },
+    "paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether payment was completed"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    }
+  },
+  "required": [
+    "buyer_email",
+    "quantity"
+  ],
+  "rls": {
+    "create": true,
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "chairman"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "owner"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admiral"
+          }
+        }
+      ]
+    }
+  }
+}
