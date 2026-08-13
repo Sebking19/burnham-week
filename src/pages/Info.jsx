@@ -26,7 +26,7 @@ export default function Info() {
       </InfoSection>
 
       <InfoSection title="Results & Standings">
-        <LinkRow label="Race results" url="https://www.burnhamweek.com/race-results/" icon={BarChart3} />
+        <LinkRow label="Race results 2026" url="https://www.burnhamweek.com/results-2026/" icon={BarChart3} />
         <LinkRow label="The Town Cup" url="https://www.burnhamweek.com/town-cup/" icon={Award} />
       </InfoSection>
 
