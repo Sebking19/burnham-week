@@ -37,13 +37,11 @@ export default function Layout({ children, currentPageName }) {
         <header className="fixed top-0 left-0 right-0 z-40 bg-white" style={{ paddingTop: "env(safe-area-inset-top)" }}>
           <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40">
             <Link to="/" className="flex items-center gap-3">
-              <span className="w-14 h-14 rounded-full border-[3px] border-dotted border-[#1B2A5B] flex items-center justify-center shrink-0">
-                <svg width="24" height="26" viewBox="0 0 24 26" aria-hidden="true">
-                  <path d="M12 1 L20 19 H12 Z" fill="#4C7CF0" />
-                  <path d="M10 6 L10 19 H3 Z" fill="#1B2A5B" />
-                  <rect x="2" y="20" width="20" height="3" rx="1.5" fill="#1B2A5B" />
-                </svg>
-              </span>
+              <img
+                src="https://www.burnhamweek.com/wp-content/themes/burnham-week-2026/img/burnham-week-logo-2026.png"
+                alt="Burnham Week 2026"
+                className="h-14 w-auto shrink-0 object-contain"
+              />
               <div className="leading-tight">
                 <p className="font-display text-2xl text-[#1B2A5B]">Burnham Week</p>
                 <p className="text-[0.8rem] text-[#141B34]/70">Sat 29 Aug – Sun 5 Sep 2026</p>
