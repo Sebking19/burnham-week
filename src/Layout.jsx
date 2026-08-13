@@ -20,7 +20,7 @@ const tabs = [
 export default function Layout({ children, currentPageName }) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { activeTab, setActiveTab, pushPage, resetTab, saveScrollPosition, getScrollPosition, stacks, getCurrentPath } = useNavigationStack();
+  const { activeTab, setActiveTab, resetTab, saveScrollPosition, getScrollPosition } = useNavigationStack();
   const prevTab = useRef(activeTab);
 
   useEffect(() => {
@@ -39,8 +39,7 @@ export default function Layout({ children, currentPageName }) {
         window.scrollTo(0, getScrollPosition(tab.page));
       }
     } else {
-      // Sub-page: push onto the active tab's stack
-      pushPage(prevTab.current, `/${currentPageName}`);
+      // Sub-page (Profile, Help, Settings, Privacy): never becomes a tab's resume target
       window.scrollTo(0, 0);
     }
   }, [currentPageName]);
@@ -118,12 +117,10 @@ export default function Layout({ children, currentPageName }) {
           <div className="max-w-3xl mx-auto h-[74px] flex items-stretch">
             {tabs.map(({ name, icon: Icon, page, path }) => {
               const active = currentPageName === page || (page === "Welcome" && !currentPageName);
-              // Resume the tab where the user left it (deepest page in its stack)
-              const tabPath = (stacks[page] || []).length > 1 ? getCurrentPath(page) : path;
               return (
                 <Link
                   key={page}
-                  to={tabPath}
+                  to={path}
                   onClick={() => handleTabClick({ page, path })}
                   className="flex-1 flex items-center justify-center px-1"
                 >
