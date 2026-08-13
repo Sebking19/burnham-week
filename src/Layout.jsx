@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigationStack } from "@/lib/NavigationStackContext";
 import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 import { loadSettings, applySettings } from "@/lib/accessibility";
 import BackButton from "@/components/BackButton";
@@ -17,10 +19,41 @@ const tabs = [
 
 export default function Layout({ children, currentPageName }) {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const { activeTab, setActiveTab, pushPage, resetTab, saveScrollPosition, getScrollPosition } = useNavigationStack();
+  const prevTab = useRef(activeTab);
 
   useEffect(() => {
     applySettings(loadSettings());
   }, []);
+
+  // Track page entry in the tab's stack and restore that tab's scroll position
+  useEffect(() => {
+    if (!currentPageName) return;
+    const tab = tabs.find(t => t.page === currentPageName);
+    if (tab) {
+      if (prevTab.current !== tab.page) {
+        saveScrollPosition(prevTab.current, window.scrollY);
+        prevTab.current = tab.page;
+        setActiveTab(tab.page);
+        window.scrollTo(0, getScrollPosition(tab.page));
+      }
+    } else {
+      // Sub-page: push onto the active tab's stack
+      pushPage(prevTab.current, `/${currentPageName}`);
+      window.scrollTo(0, 0);
+    }
+  }, [currentPageName]);
+
+  const handleTabClick = (tab) => {
+    const isActive = currentPageName === tab.page;
+    if (isActive) {
+      // Double-tap on the active tab: reset its stack to the root page
+      resetTab(tab.page);
+      window.scrollTo(0, 0);
+      navigate(tab.path);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white text-[#141B34]">
@@ -62,8 +95,19 @@ export default function Layout({ children, currentPageName }) {
         </header>
       )}
 
-      <main className={`max-w-3xl mx-auto px-4 ${isAuthenticated ? "pt-28 pb-32" : "pt-0 pb-0"}`}>
-        {children}
+      <main className={`max-w-3xl mx-auto px-4 overflow-x-hidden ${isAuthenticated ? "pt-28 pb-32" : "pt-0 pb-0"}`}>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={currentPageName || "root"}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+            style={{ willChange: "transform" }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {isAuthenticated && (
@@ -72,7 +116,12 @@ export default function Layout({ children, currentPageName }) {
             {tabs.map(({ name, icon: Icon, page, path }) => {
               const active = currentPageName === page || (page === "Welcome" && !currentPageName);
               return (
-                <Link key={page} to={path} className="flex-1 flex items-center justify-center px-1">
+                <Link
+                  key={page}
+                  to={path}
+                  onClick={() => handleTabClick({ page, path })}
+                  className="flex-1 flex items-center justify-center px-1"
+                >
                   <span className={`flex items-center gap-2 px-3 py-2.5 rounded-lg ${active ? "bg-[#4C7CF0] text-white font-bold" : "text-[#1B2A5B] hover:bg-[#4C7CF0]/10"}`}>
                     <Icon size={22} strokeWidth={active ? 2.4 : 2} />
                     <span className="text-base hidden sm:inline">{name}</span>
