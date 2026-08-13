@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
-import { Anchor, CalendarDays, CloudSun, Megaphone, UserCircle2, ChevronRight } from "lucide-react";
+import { Anchor, CalendarDays, CloudSun, Megaphone, UserCircle2 } from "lucide-react";
 
 const WEEK_START = new Date("2026-08-29T00:00:00");
 const WEEK_END = new Date("2026-09-05T23:59:59");
@@ -17,7 +17,7 @@ function countdownText() {
     const dayNum = Math.floor((now - WEEK_START) / 86400000) + 1;
     return `Day ${dayNum} of Burnham Week`;
   }
-  return "Burnham Week 2026 has finished — see you next year!";
+  return "Burnham Week 2026 has finished";
 }
 
 const links = [
@@ -25,6 +25,13 @@ const links = [
   { to: "/Forecast", icon: CloudSun, title: "Weather, Wind & Tides", desc: "Forecast for the River Crouch" },
   { to: "/Notices", icon: Megaphone, title: "Notices", desc: "Announcements from the organisers" },
   { to: "/Profile", icon: UserCircle2, title: "My Profile", desc: "Your name, boat and helm or crew role" },
+];
+
+const OFFICE_TIMES = [
+  ["Friday 28 August", "15:00 – 20:00"],
+  ["Saturday 29 August", "08:00 – 11:30"],
+  ["Sunday 30 August", "09:30 – 11:30"],
+  ["Rest of the week", "09:30 – 11:30"],
 ];
 
 export default function Welcome() {
@@ -38,16 +45,16 @@ export default function Welcome() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[#0E2A4E] text-white">
-        <div className="w-20 h-20 rounded-full bg-amber-400 flex items-center justify-center mb-6">
-          <Anchor size={40} className="text-[#0E2A4E]" />
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[#0B1F44] text-[#F4EFE3]">
+        <div className="w-20 h-20 rounded-full bg-[#C8A24A] flex items-center justify-center mb-6">
+          <Anchor size={40} className="text-[#0B1F44]" />
         </div>
-        <h1 className="text-4xl font-bold mb-3">Burnham Week 2026</h1>
-        <p className="text-xl text-white/80 mb-2">Saturday 29 August – Saturday 5 September</p>
-        <p className="text-lg text-white/60 mb-8">The East Coast's most challenging and friendly regatta — sailed on the River Crouch since 1893.</p>
+        <h1 className="font-display text-5xl mb-3">Burnham Week 2026</h1>
+        <p className="text-xl mb-2">Saturday 29 August – Saturday 5 September</p>
+        <p className="text-lg text-[#F4EFE3]/70 mb-8 max-w-md">The East Coast's most challenging and friendly regatta — sailed on the River Crouch since 1893.</p>
         <button
           onClick={() => base44.auth.redirectToLogin()}
-          className="bg-amber-400 text-[#0E2A4E] text-xl font-bold px-10 py-4 rounded-2xl hover:bg-amber-300"
+          className="bg-[#C8A24A] text-[#0B1F44] text-xl font-bold px-10 py-4 rounded-sm hover:bg-[#D8B662]"
         >
           Sign in to continue
         </button>
@@ -56,47 +63,53 @@ export default function Welcome() {
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-3xl font-bold text-[#0E2A4E]">{firstName ? `Welcome, ${firstName}` : "Welcome"}</h1>
-        <p className="text-lg text-slate-600 mt-1">Burnham Week · 29 August – 5 September 2026</p>
+    <div className="pt-2">
+      <h1 className="font-display text-4xl md:text-5xl text-[#0B1F44]">
+        {firstName ? `Welcome, ${firstName}` : "Welcome"}
+      </h1>
+      <p className="text-lg text-[#0B1F44]/75 mt-1">Burnham Week · 29 August – 5 September 2026</p>
+
+      {/* Countdown */}
+      <div className="mt-6 border-y-[3px] border-[#C8A24A] py-[3px]">
+        <div className="bg-[#0B1F44] text-center py-5 px-4">
+          <p className="text-[#C8A24A] text-base font-bold uppercase tracking-[0.2em]">Countdown</p>
+          <p className="font-display text-4xl text-[#F4EFE3] mt-1">{countdownText()}</p>
+        </div>
       </div>
 
-      <div className="bg-[#0E2A4E] text-white rounded-2xl p-6 text-center">
-        <p className="text-amber-300 text-lg font-bold uppercase tracking-wide">Countdown</p>
-        <p className="text-3xl font-bold mt-1">{countdownText()}</p>
-      </div>
-
-      <div className="space-y-4">
+      {/* Links as ruled rows */}
+      <div className="mt-8">
         {links.map(({ to, icon: Icon, title, desc }) => (
           <Link
             key={to}
             to={to}
-            className="flex items-center gap-4 bg-white border-2 border-slate-200 rounded-2xl p-5 hover:border-[#0E2A4E] shadow-sm"
+            className="flex items-center gap-4 py-4 border-b border-[#0B1F44]/20 group"
           >
-            <div className="w-14 h-14 rounded-xl bg-[#0E2A4E] flex items-center justify-center shrink-0">
-              <Icon size={28} className="text-amber-300" />
-            </div>
-            <div className="flex-1">
-              <p className="text-xl font-bold text-[#0E2A4E]">{title}</p>
-              <p className="text-base text-slate-600">{desc}</p>
-            </div>
-            <ChevronRight size={28} className="text-slate-400 shrink-0" />
+            <span className="w-11 h-11 rounded-full bg-[#C8A24A] flex items-center justify-center shrink-0">
+              <Icon size={22} className="text-[#0B1F44]" />
+            </span>
+            <span className="text-lg leading-snug">
+              <span className="font-bold text-[#0B1F44] group-hover:underline">{title}</span>
+              <span className="text-[#0B1F44]/70"> — {desc}</span>
+            </span>
           </Link>
         ))}
       </div>
 
-      <div className="bg-white border-2 border-slate-200 rounded-2xl p-5">
-        <h2 className="text-xl font-bold text-[#0E2A4E] mb-3">Regatta Office Opening Times</h2>
-        <div className="space-y-2 text-lg">
-          <div className="flex justify-between gap-4"><span>Friday 28 August</span><span className="font-bold">15:00 – 20:00</span></div>
-          <div className="flex justify-between gap-4"><span>Saturday 29 August</span><span className="font-bold">08:00 – 11:30</span></div>
-          <div className="flex justify-between gap-4"><span>Sunday 30 August</span><span className="font-bold">09:30 – 11:30</span></div>
-          <div className="flex justify-between gap-4"><span>Rest of the week</span><span className="font-bold">09:30 – 11:30</span></div>
+      {/* Office times */}
+      <div className="mt-8">
+        <h2 className="font-display text-3xl text-[#0B1F44]">Regatta Office Opening Times</h2>
+        <div className="mt-3">
+          {OFFICE_TIMES.map(([day, time]) => (
+            <div key={day} className="flex justify-between gap-4 py-2.5 border-b border-[#0B1F44]/15 text-lg text-[#0B1F44]">
+              <span>{day}</span>
+              <span>{time}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      <p className="text-base text-slate-500 text-center px-4 pb-2">
+      <p className="text-base text-[#0B1F44]/60 mt-8">
         Organised by the Joint Clubs Committee: Royal Corinthian YC, Royal Burnham YC, Crouch YC and Burnham SC.
       </p>
     </div>
