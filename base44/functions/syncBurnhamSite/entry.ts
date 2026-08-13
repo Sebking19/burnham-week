@@ -31,7 +31,7 @@ async function fetchPage(url) {
 function decode(raw) {
   return String(raw || '')
     .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
+    .replace(/&nbsp;|&#160;|&#xa0;/gi, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&#8217;|&rsquo;|&#039;|&#39;/g, "'")
     .replace(/&#8211;|&ndash;/g, '–')
@@ -92,8 +92,28 @@ function parseFleets(html) {
   return dedupe(items, 'url');
 }
 
+const NAV_PATHS = /\/(news|fleets?|sponsors|social|courses|results|entry|contact|notice-board|privacy|about|shop|category|author|tag|feed)/i;
+
 function parseDocuments(html) {
-  return dedupe(linksIn(freeText(html)), 'url');
+  const items = [];
+  // Site navigation sits above the page heading, so start reading at the heading.
+  const start = html.search(/<h1[^>]*>/i);
+  const body = start > 0 ? html.slice(start) : html;
+  for (const m of body.matchAll(/<a[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)) {
+    const url = m[1];
+    const inner = m[2];
+    if (/privacy/i.test(url)) continue;
+    if (/<img/i.test(inner)) continue; // sponsor logo links
+    const title = decode(inner);
+    if (!title || title.length < 3) continue;
+    if (/^(home|get in touch|results|visitors|photo gallery)$/i.test(title)) continue;
+    const isFile = /\/wp-content\/uploads\//i.test(url);
+    const isPage = /burnhamweek\.com\//i.test(url) && !NAV_PATHS.test(url);
+    if (!isFile && !isPage) continue;
+    const ext = /\.(pdf|docx?|xlsx?)(\?|$)/i.exec(url);
+    items.push({ title, url, subtitle: ext ? ext[1].toUpperCase() : undefined });
+  }
+  return dedupe(items, 'url').slice(0, 25);
 }
 
 function parseCourses(html) {

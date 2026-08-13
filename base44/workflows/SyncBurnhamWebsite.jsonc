@@ -1,0 +1,45 @@
+{
+  "name": "Sync Burnham Week website",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "sync_burnham_website",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_next_block": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncBurnhamSite",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh website content",
+            "description": "Oldest block first"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 */2 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/London",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Refreshes the most out-of-date block of official Burnham Week website content every 2 hours"
+}
