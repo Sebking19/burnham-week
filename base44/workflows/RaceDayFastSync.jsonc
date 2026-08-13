@@ -1,0 +1,45 @@
+{
+  "name": "Race day fast sync",
+  "description": "During Burnham Week race days, refreshes official website content every 15 minutes from 3pm to midnight \u2014 the window when each day's results and notices are published",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "*/15 15-23 * 8,9 *",
+      "one_time_date": null,
+      "timezone": "Europe/London",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "on_date",
+      "ends_on_date": "2026-09-06T23:00:00Z",
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "race_day_fast_sync",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_block": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncBurnhamSite",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh website content",
+            "description": "Every 15 min on race evenings"
+          }
+        }
+      }
+    ]
+  }
+}
