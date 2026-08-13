@@ -4,14 +4,15 @@ const NavigationStackContext = createContext(null);
 
 export function NavigationStackProvider({ children }) {
   const [stacks, setStacks] = useState({
+    Welcome: ["/"],
     Schedule: ["/Schedule"],
-    Feed: ["/Feed"],
-    MyEvents: ["/MyEvents"],
-    Announcements: ["/Announcements"],
+    Forecast: ["/Forecast"],
+    Notices: ["/Notices"],
+    Info: ["/Info"],
   });
 
   const [scrollPositions, setScrollPositions] = useState({});
-  const [activeTab, setActiveTab] = useState("Schedule");
+  const [activeTab, setActiveTab] = useState("Welcome");
 
   const pushPage = useCallback((tab, path) => {
     setStacks(prev => ({
