@@ -17,10 +17,10 @@ export default function AccessibilityOptions() {
   };
 
   return (
-    <div className="bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-6">
-      <h2 className="font-display text-2xl text-[#1B2A5B]">Accessibility</h2>
+    <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-6">
+      <h2 className="font-display text-2xl text-[#1B2A5B] dark:text-[#8FAEF7]">Accessibility</h2>
 
-      <p className="mt-5 font-bold text-[#1B2A5B]">Text size</p>
+      <p className="mt-5 font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">Text size</p>
       <div className="flex flex-wrap gap-3 mt-2">
         {SIZES.map((s) => (
           <button
@@ -29,7 +29,7 @@ export default function AccessibilityOptions() {
             className={`px-5 py-3 rounded-lg text-lg font-bold border-2 ${
               settings.textSize === s.value
                 ? "bg-[#4C7CF0] border-[#4C7CF0] text-white"
-                : "border-[#1B2A5B]/30 text-[#1B2A5B] hover:bg-[#4C7CF0]/10"
+                : "border-[#1B2A5B]/30 dark:border-white/15 text-[#1B2A5B] dark:text-white hover:bg-[#4C7CF0]/10"
             }`}
           >
             {s.label}
@@ -37,8 +37,8 @@ export default function AccessibilityOptions() {
         ))}
       </div>
 
-      <label className="flex items-center justify-between gap-4 mt-6 py-3 border-t border-[#141B34]/10">
-        <span className="text-lg text-[#141B34]">High contrast text</span>
+      <label className="flex items-center justify-between gap-4 mt-6 py-3 border-t border-[#141B34]/10 dark:border-white/10">
+        <span className="text-lg text-[#141B34] dark:text-white">High contrast text</span>
         <input
           type="checkbox"
           checked={settings.highContrast}
@@ -47,8 +47,8 @@ export default function AccessibilityOptions() {
         />
       </label>
 
-      <label className="flex items-center justify-between gap-4 py-3 border-t border-[#141B34]/10">
-        <span className="text-lg text-[#141B34]">Underline all links</span>
+      <label className="flex items-center justify-between gap-4 py-3 border-t border-[#141B34]/10 dark:border-white/10">
+        <span className="text-lg text-[#141B34] dark:text-white">Underline all links</span>
         <input
           type="checkbox"
           checked={settings.underlineLinks}

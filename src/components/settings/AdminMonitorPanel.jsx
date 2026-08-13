@@ -25,7 +25,7 @@ export default function AdminMonitorPanel() {
 
   if (!stats) {
     return (
-      <div className="bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-6 text-lg text-[#141B34]/70">
+      <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-6 text-lg text-[#141B34]/70 dark:text-white/70">
         Loading admin panel...
       </div>
     );
@@ -39,20 +39,20 @@ export default function AdminMonitorPanel() {
   ];
 
   return (
-    <div className="bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-6">
-      <h2 className="font-display text-2xl text-[#1B2A5B]">Admin monitor</h2>
+    <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-6">
+      <h2 className="font-display text-2xl text-[#1B2A5B] dark:text-[#8FAEF7]">Admin monitor</h2>
       <div className="grid grid-cols-2 gap-4 mt-4">
         {tiles.map(({ icon: Icon, label, value }) => (
-          <div key={label} className="bg-[#F4F7FC] rounded-lg p-4">
+          <div key={label} className="bg-[#F4F7FC] dark:bg-white/5 rounded-lg p-4">
             <Icon size={22} className="text-[#4C7CF0]" />
-            <p className="font-display text-3xl text-[#1B2A5B] mt-2">{value}</p>
-            <p className="text-base text-[#141B34]/70">{label}</p>
+            <p className="font-display text-3xl text-[#1B2A5B] dark:text-white mt-2">{value}</p>
+            <p className="text-base text-[#141B34]/70 dark:text-white/70">{label}</p>
           </div>
         ))}
       </div>
       {stats.latestNotice && (
-        <p className="text-base text-[#141B34]/70 mt-4">
-          Latest notice: <span className="font-bold text-[#1B2A5B]">{stats.latestNotice.title}</span>
+        <p className="text-base text-[#141B34]/70 dark:text-white/70 mt-4">
+          Latest notice: <span className="font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">{stats.latestNotice.title}</span>
         </p>
       )}
     </div>

@@ -40,15 +40,19 @@ export default function EventComments({ eventId, user }) {
   const handleSubmit = async () => {
     if (!text.trim() || !user?.email) return;
     setSubmitting(true);
-    await base44.entities.EventComment.create({
+    const data = {
       event_id: eventId,
       user_email: user.email,
       user_name: displayName,
       content: replyTo ? `@${replyTo.user_name} ${text.trim()}` : text.trim(),
       reply_to_id: replyTo?.id || null,
-    });
+    };
+    // Show the comment immediately, then reconcile with the server
+    const tempId = `pending-${Date.now()}`;
+    setComments(prev => [...prev, { ...data, id: tempId, created_date: new Date().toISOString(), pending: true }]);
     setText("");
     setReplyTo(null);
+    await base44.entities.EventComment.create(data);
     setSubmitting(false);
     loadComments();
   };
@@ -152,7 +156,7 @@ export default function EventComments({ eventId, user }) {
 
 function CommentBubble({ comment, user, canDelete, onDelete, onReply }) {
   return (
-    <div className="bg-white/5 border border-white/8 rounded-xl px-3 py-2.5 space-y-1">
+    <div className={`bg-white/5 border border-white/8 rounded-xl px-3 py-2.5 space-y-1 ${comment.pending ? "opacity-60" : ""}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0">

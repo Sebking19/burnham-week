@@ -39,7 +39,14 @@ export default function Notices() {
         <p className="text-lg text-slate-600 dark:text-white/70 mt-1">Announcements from the organisers</p>
       </div>
 
-      {isAdmin && <NoticeComposer user={user} onPosted={load} />}
+      {isAdmin && (
+        <NoticeComposer
+          user={user}
+          onPosted={(optimistic) =>
+            optimistic ? setNotices(prev => [optimistic, ...(prev || [])]) : load()
+          }
+        />
+      )}
 
       {notices === null ? (
         <div className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-6 flex items-center gap-3 text-lg text-slate-600">
@@ -52,10 +59,10 @@ export default function Notices() {
         </div>
       ) : (
         notices.map(n => (
-          <div key={n.id} className="bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-5">
+          <div key={n.id} className={`bg-white dark:bg-[#1A1A1A] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-5 ${n.pending ? "opacity-60" : ""}`}>
             <div className="flex items-start justify-between gap-3">
               <h2 className="text-2xl font-bold text-[#1B2A5B] dark:text-[#8FAEF7]">{n.title}</h2>
-              {isAdmin && (
+              {isAdmin && !n.pending && (
                 <button
                   onClick={() => handleDelete(n.id)}
                   aria-label="Delete notice"
