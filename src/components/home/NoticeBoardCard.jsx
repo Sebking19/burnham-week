@@ -1,4 +1,4 @@
-import { FileText, Phone } from "lucide-react";
+import { FileText } from "lucide-react";
 
 export default function NoticeBoardCard() {
   return (
@@ -19,15 +19,9 @@ export default function NoticeBoardCard() {
       <div className="bg-[#FDECEC] dark:bg-[#3A1A1A] border-2 border-[#C62828]/40 rounded-2xl px-6 py-5">
         <h2 className="font-display text-2xl text-[#C62828] dark:text-[#FF8A80]">Safety on the water</h2>
         <p className="mt-2 text-lg">
-          In an emergency call <a href="tel:999" className="font-bold underline">999</a> and ask for the Coastguard.
+          In an emergency call <span className="font-bold">999</span> and ask for the Coastguard.
         </p>
         <div className="mt-3 flex flex-wrap gap-3">
-          <a
-            href="tel:999"
-            className="inline-flex items-center gap-2 bg-[#C62828] text-white font-bold px-5 py-3 rounded-lg hover:bg-[#A81F1F]"
-          >
-            <Phone size={20} /> Call 999
-          </a>
           <a
             href="https://www.burnhamweek.com/wp-content/uploads/2026/04/Safety-Plan-2026.pdf"
             target="_blank"
