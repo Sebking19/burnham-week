@@ -29,14 +29,14 @@ export default function PrivacyPolicy() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-3xl text-[#1B2A5B]">Privacy Policy</h1>
-        <p className="text-lg text-[#141B34]/70 mt-1">Burnham Week app — last updated August 2026</p>
+        <h1 className="font-display text-3xl text-[#1B2A5B] dark:text-[#8FAEF7]">Privacy Policy</h1>
+        <p className="text-lg text-[#141B34]/70 dark:text-white/70 mt-1">Burnham Week app — last updated August 2026</p>
       </div>
 
       {SECTIONS.map((s) => (
-        <section key={s.title} className="bg-white border-2 border-dotted border-[#141B34]/40 rounded-2xl p-6">
-          <h2 className="font-display text-2xl text-[#1B2A5B]">{s.title}</h2>
-          <p className="text-lg text-[#141B34]/85 mt-2 leading-relaxed">{s.body}</p>
+        <section key={s.title} className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl p-6">
+          <h2 className="font-display text-2xl text-[#1B2A5B] dark:text-[#8FAEF7]">{s.title}</h2>
+          <p className="text-lg text-[#141B34]/85 dark:text-white/85 mt-2 leading-relaxed">{s.body}</p>
         </section>
       ))}
     </div>
