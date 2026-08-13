@@ -16,18 +16,18 @@ const DOCS = [
 
 export default function DocumentLinks() {
   return (
-    <div className="divide-y-2 divide-[#0B1F44]/10">
+    <div className="divide-y divide-[#141B34]/10">
       {DOCS.map((d) => (
         <a
           key={d.label}
           href={d.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 py-4 hover:bg-[#C8A24A]/15 px-1"
+          className="flex items-center gap-3 py-4 px-2 rounded-lg hover:bg-[#4C7CF0]/10"
         >
-          <FileText size={22} className="text-[#C8A24A] shrink-0" />
-          <span className="flex-1 text-lg">{d.label}</span>
-          <ExternalLink size={18} className="text-[#0B1F44]/50 shrink-0" />
+          <FileText size={22} className="text-[#4C7CF0] shrink-0" />
+          <span className="flex-1 text-lg text-[#1B2A5B]">{d.label}</span>
+          <ExternalLink size={18} className="text-[#141B34]/40 shrink-0" />
         </a>
       ))}
     </div>

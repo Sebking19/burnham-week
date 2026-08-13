@@ -26,7 +26,7 @@ export default function Notices() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-3xl font-bold text-[#0E2A4E]">Notices</h1>
+        <h1 className="text-3xl font-bold text-[#1B2A5B]">Notices</h1>
         <p className="text-lg text-slate-600 mt-1">Announcements from the organisers</p>
       </div>
 
@@ -34,7 +34,7 @@ export default function Notices() {
 
       {notices === null ? (
         <div className="bg-white border-2 border-slate-200 rounded-2xl p-6 flex items-center gap-3 text-lg text-slate-600">
-          <div className="w-6 h-6 border-4 border-slate-200 border-t-[#0E2A4E] rounded-full animate-spin" />
+          <div className="w-6 h-6 border-4 border-slate-200 border-t-[#1B2A5B] rounded-full animate-spin" />
           Loading notices...
         </div>
       ) : notices.length === 0 ? (
@@ -45,7 +45,7 @@ export default function Notices() {
         notices.map(n => (
           <div key={n.id} className="bg-white border-2 border-slate-200 rounded-2xl p-5">
             <div className="flex items-start justify-between gap-3">
-              <h2 className="text-2xl font-bold text-[#0E2A4E]">{n.title}</h2>
+              <h2 className="text-2xl font-bold text-[#1B2A5B]">{n.title}</h2>
               {isAdmin && (
                 <button
                   onClick={() => handleDelete(n.id)}

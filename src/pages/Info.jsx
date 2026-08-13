@@ -4,8 +4,8 @@ import DocumentLinks from "@/components/info/DocumentLinks";
 export default function Info() {
   return (
     <div>
-      <h1 className="font-display text-3xl mb-1">Information</h1>
-      <p className="text-[#0B1F44]/70 mb-6">Burnham Week 2026 · Sat 29 Aug – Sun 5 Sep</p>
+      <h1 className="font-display text-3xl mb-1 text-[#1B2A5B]">Information</h1>
+      <p className="text-[#141B34]/70 mb-6">Burnham Week 2026 · Sat 29 Aug – Sun 5 Sep</p>
 
       <InfoSection title="Racing Documents & Notice Board">
         <DocumentLinks />
@@ -61,13 +61,13 @@ export default function Info() {
           href="https://www.burnhamweek.com/enter-here/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block mt-2 bg-[#0B1F44] text-[#F4EFE3] px-6 py-3 rounded-sm text-lg font-bold"
+          className="inline-block mt-2 bg-[#4C7CF0] text-white px-6 py-3 rounded-lg text-lg font-bold hover:bg-[#3E6BDB]"
         >
           Enter Burnham Week 2026
         </a>
       </InfoSection>
 
-      <p className="text-sm text-[#0B1F44]/60 mb-4">
+      <p className="text-sm text-[#141B34]/60 mb-4">
         Information sourced from burnhamweek.com. Always check the official notice board for the
         latest changes.
       </p>

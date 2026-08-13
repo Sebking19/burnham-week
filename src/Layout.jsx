@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { Anchor, CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
+import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },
@@ -14,7 +14,7 @@ export default function Layout({ children, currentPageName }) {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#F4EFE3] text-[#0B1F44]">
+    <div className="min-h-screen bg-white text-[#141B34]">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap');
         * { font-family: 'Source Sans 3', sans-serif; }
@@ -23,29 +23,28 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {isAuthenticated && (
-        <header className="fixed top-0 left-0 right-0 z-40 bg-[#0B1F44] text-[#F4EFE3]" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-          <div className="max-w-3xl mx-auto px-4 h-[76px] flex items-center justify-between relative">
+        <header className="fixed top-0 left-0 right-0 z-40 bg-white" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+          <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40">
             <Link to="/" className="flex items-center gap-3">
-              <Anchor size={30} className="text-[#C8A24A] shrink-0" />
+              <span className="w-14 h-14 rounded-full border-[3px] border-dotted border-[#1B2A5B] flex items-center justify-center shrink-0">
+                <svg width="24" height="26" viewBox="0 0 24 26" aria-hidden="true">
+                  <path d="M12 1 L20 19 H12 Z" fill="#4C7CF0" />
+                  <path d="M10 6 L10 19 H3 Z" fill="#1B2A5B" />
+                  <rect x="2" y="20" width="20" height="3" rx="1.5" fill="#1B2A5B" />
+                </svg>
+              </span>
               <div className="leading-tight">
-                <p className="font-display text-2xl text-[#C8A24A]">Burnham Week</p>
-                <p className="text-sm tracking-wide">29 AUG – 5 SEP 2026</p>
+                <p className="font-display text-2xl text-[#1B2A5B]">Burnham Week</p>
+                <p className="text-[0.8rem] text-[#141B34]/70">Sat 29 Aug – Sun 5 Sep 2026</p>
               </div>
             </Link>
-            <div className="flex items-center gap-3">
-              <Link
-                to="/Profile"
-                aria-label="My profile"
-                className={`w-11 h-11 rounded-sm flex items-center justify-center ${currentPageName === "Profile" ? "bg-[#D8B662]" : "bg-[#C8A24A] hover:bg-[#D8B662]"}`}
-              >
-                <User size={24} className="text-[#0B1F44]" />
-              </Link>
-              {/* Burgee pennant */}
-              <svg width="54" height="34" viewBox="0 0 54 34" aria-hidden="true" className="hidden sm:block">
-                <polygon points="2,2 52,17 2,32" fill="#0B1F44" stroke="#C8A24A" strokeWidth="1.6" strokeDasharray="3 2" />
-                <path d="M14 12v9m-3-9h6m-3 9c-3 0-5-2-5-4m5 4c3 0 5-2 5-4" stroke="#C8A24A" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-              </svg>
-            </div>
+            <Link
+              to="/Profile"
+              aria-label="My profile"
+              className={`w-11 h-11 rounded-lg flex items-center justify-center ${currentPageName === "Profile" ? "bg-[#1B2A5B]" : "bg-[#4C7CF0] hover:bg-[#3E6BDB]"}`}
+            >
+              <User size={24} className="text-white" />
+            </Link>
           </div>
         </header>
       )}
@@ -55,19 +54,15 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {isAuthenticated && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#F4EFE3] border-t-2 border-[#0B1F44]/25" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-dotted border-[#141B34]/40" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
           <div className="max-w-3xl mx-auto h-[74px] flex items-stretch">
             {tabs.map(({ name, icon: Icon, page, path }) => {
               const active = currentPageName === page || (page === "Welcome" && !currentPageName);
               return (
-                <Link
-                  key={page}
-                  to={path}
-                  className="flex-1 flex items-center justify-center px-1"
-                >
-                  <span className={`flex items-center gap-2 px-4 py-2.5 rounded-sm ${active ? "bg-[#C8A24A] text-[#0B1F44] font-bold" : "text-[#0B1F44]/80 hover:text-[#0B1F44]"}`}>
+                <Link key={page} to={path} className="flex-1 flex items-center justify-center px-1">
+                  <span className={`flex items-center gap-2 px-3 py-2.5 rounded-lg ${active ? "bg-[#4C7CF0] text-white font-bold" : "text-[#1B2A5B] hover:bg-[#4C7CF0]/10"}`}>
                     <Icon size={22} strokeWidth={active ? 2.4 : 2} />
-                    <span className="text-base">{name}</span>
+                    <span className="text-base hidden sm:inline">{name}</span>
                   </span>
                 </Link>
               );
