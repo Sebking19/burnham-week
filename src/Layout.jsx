@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
+import { useEffect } from "react";
 import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
+import { loadSettings, applySettings } from "@/lib/accessibility";
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },
@@ -13,6 +15,10 @@ const tabs = [
 export default function Layout({ children, currentPageName }) {
   const { isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    applySettings(loadSettings());
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-[#141B34]">
       <style>{`
@@ -20,6 +26,11 @@ export default function Layout({ children, currentPageName }) {
         * { font-family: 'Source Sans 3', sans-serif; }
         .font-display { font-family: 'Playfair Display', serif; }
         html { font-size: 18px; }
+        html[data-contrast="high"] .bg-white, html[data-contrast="high"] .bg-\\[\\#F4F7FC\\] { color: #000000; }
+        html[data-contrast="high"] .bg-white *:not(svg):not(path):not([class*="bg-["]),
+        html[data-contrast="high"] .bg-\\[\\#F4F7FC\\] *:not(svg):not(path) { color: #000000 !important; }
+        html[data-contrast="high"] .border-dotted { border-color: #000000 !important; }
+        html[data-underline-links="true"] a { text-decoration: underline; }
       `}</style>
 
       {isAuthenticated && (

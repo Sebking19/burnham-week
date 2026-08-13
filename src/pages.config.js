@@ -4,6 +4,8 @@ import Forecast from './pages/Forecast';
 import Notices from './pages/Notices';
 import Profile from './pages/Profile';
 import Info from './pages/Info';
+import Help from './pages/Help';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 export const PAGES = {
@@ -13,6 +15,8 @@ export const PAGES = {
     "Notices": Notices,
     "Profile": Profile,
     "Info": Info,
+    "Help": Help,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

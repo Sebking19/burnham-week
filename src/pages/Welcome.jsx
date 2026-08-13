@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
-import { Anchor, CalendarDays, CloudSun, Megaphone, UserCircle2 } from "lucide-react";
+import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, UserCircle2 } from "lucide-react";
 
 const WEEK_START = new Date("2026-08-29T00:00:00");
 const WEEK_END = new Date("2026-09-05T23:59:59");
@@ -25,6 +25,8 @@ const links = [
   { to: "/Forecast", icon: CloudSun, title: "Weather, Wind & Tides", desc: "Forecast for the River Crouch" },
   { to: "/Notices", icon: Megaphone, title: "Notices", desc: "Announcements from the organisers" },
   { to: "/Profile", icon: UserCircle2, title: "My Profile", desc: "Your name, boat and helm or crew role" },
+  { to: "/Help", icon: LifeBuoy, title: "Help", desc: "Who to call if you need a hand" },
+  { to: "/Settings", icon: Cog, title: "Settings", desc: "Text size and accessibility options" },
 ];
 
 const OFFICE_TIMES = [
