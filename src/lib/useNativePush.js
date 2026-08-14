@@ -2,28 +2,70 @@ import { useEffect } from "react";
 import { PushNotifications } from "@capacitor/push-notifications";
 import { base44 } from "@/api/base44Client";
 
-// Module-level guard: listeners attach once per app session, even if the
-// hook's host component remounts on navigation.
-let initialised = false;
+// Module-level guards: the bridge installs once, listeners attach once,
+// even if the hook's host component remounts on navigation.
+let bridgeInstalled = false;
+let pushInitialised = false;
 let lastSent = null;
+let authReady = false;
 
 const isNative = () =>
   typeof window !== "undefined" && window.Capacitor?.isNativePlatform?.();
 
 /**
  * Sends an FCM registration token to the backend for the signed-in user.
- * Exposed on window so the native layer can call it directly (see below).
+ * If the user isn't signed in yet, the token is parked on
+ * window.__pendingFcmToken and flushed once auth is available.
  */
 async function sendToken(value) {
   const token = typeof value === "string" ? value.trim() : "";
-  if (!token || token === lastSent) return { ok: false, skipped: true };
+  if (!token) return { ok: false, error: "Missing token" };
+
+  if (!authReady) {
+    window.__pendingFcmToken = token;
+    return { ok: false, pending: true };
+  }
+  if (token === lastSent) return { ok: true, skipped: true };
+
   const res = await base44.functions.invoke("registerDeviceToken", {
     token,
     platform: "ios",
   });
   lastSent = token;
+  window.__pendingFcmToken = null;
   return res?.data ?? { ok: true };
 }
+
+function flushPendingToken() {
+  if (window.__pendingFcmToken) window.registerFcmToken(window.__pendingFcmToken);
+}
+
+/**
+ * Installs the native bridge on window. Runs at import time so the functions
+ * exist before React finishes mounting and before the user signs in — native
+ * can call them at any point without risking a JS exception.
+ */
+function installBridge() {
+  if (bridgeInstalled || typeof window === "undefined") return;
+  bridgeInstalled = true;
+
+  // Called by native (AppDelegate) with the Firebase FCM token.
+  window.registerFcmToken = (token) =>
+    sendToken(token).catch((err) => {
+      console.warn("registerDeviceToken failed", err);
+      return { ok: false, error: String(err) };
+    });
+
+  // Called by native to confirm the webview is loaded and ready for handoff.
+  // Native follows this by calling registerFcmToken(pendingFCMToken); the
+  // pending check below also covers a token that arrived before this point.
+  window.notifyNativeWebViewReady = () => {
+    flushPendingToken();
+    return { ready: true, authenticated: authReady };
+  };
+}
+
+installBridge();
 
 /**
  * Associates this device's FCM token with the authenticated Base44 user.
@@ -34,20 +76,14 @@ async function sendToken(value) {
  */
 export function useNativePush(isAuthenticated) {
   useEffect(() => {
-    if (!isAuthenticated || initialised || !isNative()) return;
-    initialised = true;
+    if (!isAuthenticated) return;
 
-    // Native bridge: call this from Swift once Firebase hands you the token.
-    window.registerFcmToken = (token) =>
-      sendToken(token).catch((err) => {
-        console.warn("registerDeviceToken failed", err);
-        return { ok: false, error: String(err) };
-      });
+    // Auth is now available: accept tokens and drain anything native parked.
+    authReady = true;
+    flushPendingToken();
 
-    // If native stashed a token before the webview finished booting, use it.
-    if (window.__pendingFcmToken) {
-      window.registerFcmToken(window.__pendingFcmToken);
-    }
+    if (pushInitialised || !isNative()) return;
+    pushInitialised = true;
 
     (async () => {
       await PushNotifications.addListener("registrationError", (err) => {
