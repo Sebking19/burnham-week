@@ -6,8 +6,9 @@ import { useNavigationStack } from "@/lib/NavigationStackContext";
 import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 import { loadSettings, applySettings } from "@/lib/accessibility";
 import BackButton from "@/components/BackButton";
+import NotificationsBell from "@/components/NotificationsBell";
 
-const SUB_PAGES = ["Profile", "Help", "Settings", "PrivacyPolicy", "MyResults"];
+const SUB_PAGES = ["Profile", "Help", "Settings", "PrivacyPolicy", "MyResults", "Notifications"];
 
 const tabs = [
   { name: "Home", icon: HomeIcon, page: "Welcome", path: "/" },
@@ -83,6 +84,7 @@ export default function Layout({ children, currentPageName }) {
                 <p className="text-[0.8rem] text-[#141B34]/70 dark:text-white/70">Sat 29 Aug – Sun 5 Sep 2026</p>
               </div>
             </Link>
+            <NotificationsBell active={currentPageName === "Notifications"} />
             <Link
               to="/Profile"
               aria-label="My profile"
