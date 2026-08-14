@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { getFcmAuth, sendFcmMessage } from '../../shared/fcm.ts';
 
 export default async function (req) {
   try {
@@ -49,7 +50,36 @@ export default async function (req) {
       }
     }
 
-    return Response.json({ sent, total: recipients.length, failures });
+    // Also send via FCM HTTP v1 to devices registered by the Capacitor wrapper
+    let fcmSent = 0;
+    const fcmFailures = [];
+    const tokens = await base44.asServiceRole.entities.DeviceToken.list();
+    if (tokens.length > 0) {
+      const optedOut = new Set(
+        users.filter((u) => u.notify_announcements === false).map((u) => u.email)
+      );
+      const auth = await getFcmAuth();
+      for (const t of tokens) {
+        if (t.user_email && optedOut.has(t.user_email)) continue;
+        try {
+          await sendFcmMessage(
+            auth,
+            t.token,
+            title,
+            short || 'Open the app to read the latest notice.',
+            { url: '/Notices' }
+          );
+          fcmSent++;
+        } catch (e) {
+          if (e.unregistered) {
+            await base44.asServiceRole.entities.DeviceToken.delete(t.id);
+          }
+          fcmFailures.push({ token_id: t.id, error: e.message });
+        }
+      }
+    }
+
+    return Response.json({ sent, total: recipients.length, failures, fcmSent, fcmFailures });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
