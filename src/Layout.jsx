@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigationStack } from "@/lib/NavigationStackContext";
 import { CalendarDays, CloudSun, FileText, Home as HomeIcon, Info, User } from "lucide-react";
 import { loadSettings, applySettings } from "@/lib/accessibility";
+import { useNativePush } from "@/lib/useNativePush";
 import BackButton from "@/components/BackButton";
 import NotificationsBell from "@/components/NotificationsBell";
 
@@ -27,6 +28,8 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     applySettings(loadSettings());
   }, []);
+
+  useNativePush(isAuthenticated);
 
   // Track page entry in the tab's stack and restore that tab's scroll position
   useEffect(() => {
