@@ -50,6 +50,9 @@ export default function EnablePushCard() {
         <Bell size={22} />
         {status === "working" ? "Enabling…" : "Enable notifications"}
       </button>
+      <p className="mt-3 text-center text-[#141B34]/70 dark:text-white/70">
+        Your phone will then ask you to <strong>Allow Notifications</strong> — tap <strong>Allow</strong>.
+      </p>
       {status === "blocked" && (
         <div className="mt-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border-2 border-dotted border-amber-700/40 p-3">
           <p className="font-bold text-amber-900 dark:text-amber-200 mb-1">One more step on your phone:</p>
