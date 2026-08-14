@@ -21,7 +21,8 @@ export default function EnablePushCard() {
       const result = await Notification.requestPermission();
       setStatus(result === "granted" ? "enabled" : "blocked");
     } else {
-      setStatus("enabled");
+      // No permission prompt available in this environment — point to phone settings
+      setStatus("blocked");
     }
   };
 
@@ -50,9 +51,15 @@ export default function EnablePushCard() {
         {status === "working" ? "Enabling…" : "Enable notifications"}
       </button>
       {status === "blocked" && (
-        <p className="mt-3 text-red-700 dark:text-red-400 font-semibold">
-          Notifications are blocked for this app. Please open your phone's Settings, find this app, and allow Notifications.
-        </p>
+        <div className="mt-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border-2 border-dotted border-amber-700/40 p-3">
+          <p className="font-bold text-amber-900 dark:text-amber-200 mb-1">One more step on your phone:</p>
+          <ol className="list-decimal list-inside space-y-1 text-amber-900 dark:text-amber-200">
+            <li>Open the <strong>Settings</strong> app</li>
+            <li>Scroll down and tap <strong>Burnham Week</strong></li>
+            <li>Tap <strong>Notifications</strong></li>
+            <li>Switch <strong>Allow Notifications</strong> on</li>
+          </ol>
+        </div>
       )}
     </div>
   );
