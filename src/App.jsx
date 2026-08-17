@@ -13,6 +13,7 @@ import { NavigationStackProvider } from '@/lib/NavigationStackContext';
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 const MyResults = React.lazy(() => import('./pages/MyResults'));
 const Notifications = React.lazy(() => import('./pages/Notifications'));
+const Help = React.lazy(() => import('./pages/Help'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -54,6 +55,13 @@ const AuthenticatedApp = () => {
           <LayoutWrapper currentPageName="PrivacyPolicy">
             <Suspense fallback={<PageLoader />}>
               <PrivacyPolicy />
+            </Suspense>
+          </LayoutWrapper>
+        } />
+        <Route path="/Help" element={
+          <LayoutWrapper currentPageName="Help">
+            <Suspense fallback={<PageLoader />}>
+              <Help />
             </Suspense>
           </LayoutWrapper>
         } />
