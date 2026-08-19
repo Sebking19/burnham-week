@@ -3,15 +3,31 @@ import { fetchPage, decode } from '../../shared/burnhamFetch.ts';
 
 const INDEX_URL = 'https://www.burnhamweek.com/results-2026/';
 
+// Series codes embedded in the Sailwave file names, e.g. 2025BHSquib.htm
+const SERIES_LABELS = {
+  BH: 'Bank Holiday',
+  MW: 'Mid Week',
+  TD: 'Town Days',
+  WP: "Week's Points",
+};
+
+function seriesOf(url) {
+  const m = /\/(\d{4})(BH|MW|TD|WP)/.exec(url);
+  if (!m) return '';
+  return `${SERIES_LABELS[m[2]]} ${m[1]}`;
+}
+
 // Links on the results index that point at a Sailwave results page.
 function parseIndex(html) {
   const out = [];
   const seen = new Set();
   for (const m of html.matchAll(/<a[^>]*href="([^"]*\/results\/\d{4}results\/[^"]+\.htm)"[^>]*>([\s\S]*?)<\/a>/gi)) {
     const url = m[1].startsWith('http') ? m[1] : 'https://www.burnhamweek.com' + m[1];
-    const title = decode(m[2]);
+    let title = decode(m[2]);
     if (!title || seen.has(url)) continue;
     seen.add(url);
+    const series = seriesOf(url);
+    if (series) title = `${title} – ${series}`;
     out.push({ url, title });
   }
   return out;
