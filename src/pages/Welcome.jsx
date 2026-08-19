@@ -95,16 +95,16 @@ export default function Welcome() {
 
       <NoticeBoardCard />
 
-      {/* Links as ruled rows */}
-      <div className="bg-white dark:bg-[#1A1A1A] border-2 border-dotted border-[#141B34]/40 dark:border-white/10 rounded-2xl px-5 py-2">
-        {links.map(({ to, icon: Icon, title, desc }, i) => (
+      {/* Links as raised button tiles */}
+      <div className="space-y-3">
+        {links.map(({ to, icon: Icon, title, desc }) => (
           <Link
             key={to}
             to={to}
-            className={`flex items-center gap-4 py-4 group ${i < links.length - 1 ? "border-b border-[#141B34]/10 dark:border-white/10" : ""}`}
+            className="home-tile flex items-center gap-4 p-4 group rounded-2xl bg-white dark:bg-[#1A1A1A]"
           >
-            <span className="w-11 h-11 rounded-lg bg-[#4C7CF0] flex items-center justify-center shrink-0">
-              <Icon size={22} className="text-white" />
+            <span className="w-12 h-12 rounded-lg bg-[#4C7CF0] flex items-center justify-center shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_2px_0_rgba(20,27,52,0.35)]">
+              <Icon size={24} className="text-white" />
             </span>
             <span className="text-lg leading-snug">
               <span className="font-bold text-[#1B2A5B] dark:text-[#8FAEF7] group-hover:underline">{title}</span>
