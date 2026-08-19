@@ -133,6 +133,26 @@
     transition-duration: 0.15s;
   }
 
+  /* Defined buttons: clear depth & shadow on solid buttons for easier visibility */
+  button[class^="bg-"], button[class*=" bg-"],
+  a[class^="bg-"], a[class*=" bg-"],
+  [role="button"][class^="bg-"], [role="button"][class*=" bg-"] {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 3px 0 rgba(20, 27, 52, 0.35),
+      0 6px 14px rgba(20, 27, 52, 0.25);
+    border: 1px solid rgba(20, 27, 52, 0.2);
+  }
+  button[class^="bg-"]:active, button[class*=" bg-"]:active,
+  a[class^="bg-"]:active, a[class*=" bg-"]:active,
+  [role="button"][class^="bg-"]:active, [role="button"][class*=" bg-"]:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 1px 0 rgba(20, 27, 52, 0.3),
+      0 2px 6px rgba(20, 27, 52, 0.2);
+  }
+
   /* Visible focus ring for keyboard users */
   :focus-visible {
     outline: 2px solid rgba(34, 211, 238, 0.7);
