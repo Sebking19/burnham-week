@@ -51,6 +51,8 @@ const AuthenticatedApp = () => {
             <MainPage />
           </LayoutWrapper>
         } />
+        <Route path="/Login" element={<Navigate to="/" replace />} />
+        <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/PrivacyPolicy" element={
           <LayoutWrapper currentPageName="PrivacyPolicy">
             <Suspense fallback={<PageLoader />}>
