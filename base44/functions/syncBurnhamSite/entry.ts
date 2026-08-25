@@ -122,7 +122,13 @@ function parseCourses(html) {
   const body = decode(section.replace(/<a[\s\S]*?<\/a>/g, ' '));
   const items = [];
   if (heading) items.push({ title: decode(heading[1]), subtitle: body || undefined });
-  return items.concat(dedupe(linksIn(section), 'url'));
+  // Course diagrams posted as images on the page
+  const images = [];
+  for (const m of section.matchAll(/<img[^>]*src="([^"]+)"[^>]*>/g)) {
+    const alt = /alt="([^"]*)"/.exec(m[0]);
+    images.push({ title: alt && decode(alt[1]) ? decode(alt[1]) : 'Course diagram', image_url: m[1] });
+  }
+  return items.concat(dedupe(images, 'image_url'), dedupe(linksIn(section), 'url'));
 }
 
 function prettyName(url) {
@@ -182,7 +188,7 @@ async function syncKey(base44, key) {
   };
   const existing = await base44.asServiceRole.entities.SiteContent.filter({ key });
   // Detect real content changes (ignore fetched_at) so workflows can notify members.
-  const strip = (list) => JSON.stringify((list || []).map(({ title, subtitle, url }) => ({ title: title ?? null, subtitle: subtitle ?? null, url: url ?? null })));
+  const strip = (list) => JSON.stringify((list || []).map(({ title, subtitle, url, image_url }) => ({ title: title ?? null, subtitle: subtitle ?? null, url: url ?? null, image_url: image_url ?? null })));
   const changed = existing.length ? strip(existing[0].items) !== strip(items) : false;
   if (existing.length) {
     await base44.asServiceRole.entities.SiteContent.update(existing[0].id, data);
