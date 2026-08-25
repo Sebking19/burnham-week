@@ -181,12 +181,15 @@ async function syncKey(base44, key) {
     fetched_at: new Date().toISOString(),
   };
   const existing = await base44.asServiceRole.entities.SiteContent.filter({ key });
+  // Detect real content changes (ignore fetched_at) so workflows can notify members.
+  const strip = (list) => JSON.stringify((list || []).map(({ title, subtitle, url }) => ({ title: title ?? null, subtitle: subtitle ?? null, url: url ?? null })));
+  const changed = existing.length ? strip(existing[0].items) !== strip(items) : false;
   if (existing.length) {
     await base44.asServiceRole.entities.SiteContent.update(existing[0].id, data);
   } else {
     await base44.asServiceRole.entities.SiteContent.create(data);
   }
-  return items.length;
+  return { count: items.length, changed };
 }
 
 export default async function (req: Request): Promise<Response> {
@@ -226,15 +229,18 @@ export default async function (req: Request): Promise<Response> {
     }
 
     const results = {};
+    const changedKeys = [];
     for (const key of keys) {
       try {
-        results[key] = await syncKey(base44, key);
+        const { count, changed } = await syncKey(base44, key);
+        results[key] = count;
+        if (changed) changedKeys.push(key);
       } catch (err) {
         results[key] = `failed: ${err.message}`;
       }
     }
 
-    return Response.json({ ok: true, results });
+    return Response.json({ ok: true, results, changed_keys: changedKeys });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

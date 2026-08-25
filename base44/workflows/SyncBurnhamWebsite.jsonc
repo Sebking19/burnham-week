@@ -1,29 +1,6 @@
 {
   "name": "Sync Burnham Week website",
-  "definition": {
-    "document": {
-      "dsl": "1.0.0",
-      "name": "sync_burnham_website",
-      "version": "1.0",
-      "namespace": "base44"
-    },
-    "do": [
-      {
-        "sync_next_block": {
-          "call": "invoke_backend_function",
-          "with": {
-            "function_name": "syncBurnhamSite",
-            "args": {}
-          },
-          "then": "end",
-          "x-base44": {
-            "title": "Refresh website content",
-            "description": "Oldest block first"
-          }
-        }
-      }
-    ]
-  },
+  "description": "Refreshes the most out-of-date block of official Burnham Week website content every 2 hours and notifies members when the race courses change",
   "trigger": {
     "condition": null,
     "config": {
@@ -41,5 +18,60 @@
       "ends_after_count": null
     }
   },
-  "description": "Refreshes the most out-of-date block of official Burnham Week website content every 2 hours"
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "sync_burnham_website",
+      "version": "1.1",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_next_block": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncBurnhamSite",
+            "args": {}
+          },
+          "then": "check_courses_changed",
+          "x-base44": {
+            "title": "Refresh website content",
+            "description": "Oldest block first"
+          }
+        }
+      },
+      {
+        "check_courses_changed": {
+          "switch": [
+            {
+              "when": "${ (.sync_next_block.changed_keys // []) | index(\"courses\") != null }",
+              "then": "notify_courses"
+            },
+            {
+              "when": "${ true }",
+              "then": "end"
+            }
+          ],
+          "x-base44": {
+            "title": "Courses changed?",
+            "description": "Only notify when course content is new"
+          }
+        }
+      },
+      {
+        "notify_courses": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendCoursesPush",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Notify members",
+            "description": "Push notification about updated courses"
+          }
+        }
+      }
+    ]
+  }
 }

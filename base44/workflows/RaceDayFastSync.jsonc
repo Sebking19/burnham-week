@@ -1,6 +1,6 @@
 {
   "name": "Race day fast sync",
-  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight, and notifies members when new results appear",
+  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight, and notifies members when new results or courses appear",
   "trigger": {
     "condition": null,
     "config": {
@@ -22,7 +22,7 @@
     "document": {
       "dsl": "1.0.0",
       "name": "race_day_fast_sync",
-      "version": "1.0",
+      "version": "1.1",
       "namespace": "base44"
     },
     "do": [
@@ -33,10 +33,42 @@
             "function_name": "syncBurnhamSite",
             "args": {}
           },
-          "then": "sync_results",
+          "then": "check_courses_changed",
           "x-base44": {
             "title": "Refresh website content",
             "description": "Every 15 min on race evenings"
+          }
+        }
+      },
+      {
+        "check_courses_changed": {
+          "switch": [
+            {
+              "when": "${ (.sync_block.changed_keys // []) | index(\"courses\") != null }",
+              "then": "notify_courses"
+            },
+            {
+              "when": "${ true }",
+              "then": "sync_results"
+            }
+          ],
+          "x-base44": {
+            "title": "Courses changed?",
+            "description": "Only notify when course content is new"
+          }
+        }
+      },
+      {
+        "notify_courses": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendCoursesPush",
+            "args": {}
+          },
+          "then": "sync_results",
+          "x-base44": {
+            "title": "Notify about courses",
+            "description": "Push notification about updated courses"
           }
         }
       },
