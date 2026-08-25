@@ -7,9 +7,8 @@ export default function CoursesCard() {
 
   if (loading) return <p className="text-[#141B34]/70 dark:text-white/70">Loading courses…</p>;
 
-  const heading = items.find(i => !i.url && !i.image_url);
-  const images = items.filter(i => i.image_url);
-  const links = items.filter(i => i.url && !i.image_url);
+  const heading = items.find(i => !i.url);
+  const links = items.filter(i => i.url);
 
   return (
     <div>
@@ -19,12 +18,6 @@ export default function CoursesCard() {
           {heading.subtitle && <p className="mt-2">{heading.subtitle}</p>}
         </>
       )}
-      {images.map(item => (
-        <a key={item.image_url} href={item.image_url} target="_blank" rel="noopener noreferrer" className="block mt-4">
-          <img src={item.image_url} alt={item.title} className="w-full rounded-lg border border-[#141B34]/20" />
-          <p className="mt-1 text-base text-[#141B34]/70 dark:text-white/70">{item.title} — tap to enlarge</p>
-        </a>
-      ))}
       {links.map(item => (
         <LinkRow key={item.url} label={item.title} url={item.url} icon={Map} />
       ))}

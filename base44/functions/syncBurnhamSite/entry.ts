@@ -122,13 +122,7 @@ function parseCourses(html) {
   const body = decode(section.replace(/<a[\s\S]*?<\/a>/g, ' '));
   const items = [];
   if (heading) items.push({ title: decode(heading[1]), subtitle: body || undefined });
-  // Course diagrams posted as images on the page
-  const images = [];
-  for (const m of section.matchAll(/<img[^>]*src="([^"]+)"[^>]*>/g)) {
-    const alt = /alt="([^"]*)"/.exec(m[0]);
-    images.push({ title: alt && decode(alt[1]) ? decode(alt[1]) : 'Course diagram', image_url: m[1] });
-  }
-  return items.concat(dedupe(images, 'image_url'), dedupe(linksIn(section), 'url'));
+  return items.concat(dedupe(linksIn(section), 'url'));
 }
 
 function prettyName(url) {
