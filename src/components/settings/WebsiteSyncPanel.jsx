@@ -14,14 +14,28 @@ const LABELS = {
 export default function WebsiteSyncPanel() {
   const [rows, setRows] = useState([]);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState([]);
 
   const load = () => base44.entities.SiteContent.list().then(setRows).catch(() => {});
 
   useEffect(() => { load(); }, []);
 
+  const runSync = async (payload) => {
+    const res = await base44.functions.invoke("syncBurnhamSite", payload).catch(() => null);
+    const results = res?.data?.results || {};
+    return Object.keys(results).filter(k => typeof results[k] === "string");
+  };
+
   const refresh = async () => {
     setBusy(true);
-    await base44.functions.invoke("syncBurnhamSite", { all: true }).catch(() => {});
+    setFailed([]);
+    // The website's bot check sometimes blocks a page, so retry anything that failed.
+    let stillFailed = await runSync({ all: true });
+    for (const key of stillFailed.slice()) {
+      const again = await runSync({ key });
+      if (!again.length) stillFailed = stillFailed.filter(k => k !== key);
+    }
+    setFailed(stillFailed);
     await load();
     setBusy(false);
   };
@@ -55,6 +69,12 @@ export default function WebsiteSyncPanel() {
         <RefreshCw size={20} className={busy ? "animate-spin" : ""} />
         {busy ? "Checking…" : "Check for updates now"}
       </button>
+
+      {failed.length > 0 && (
+        <p className="mt-3 text-base text-red-700 dark:text-red-400">
+          The website blocked us while fetching: {failed.map(k => LABELS[k] || k).join(", ")}. Please try again in a minute.
+        </p>
+      )}
     </div>
   );
 }

@@ -10,22 +10,25 @@ const HEADERS = {
 // JavaScript captcha page. Try the page directly, and when the check blocks us fall back to a
 // rendering reader service that returns the real HTML.
 async function fetchPage(url) {
-  const direct = await fetch(url, { headers: HEADERS });
-  if (direct.ok) {
-    const html = await direct.text();
-    if (!/sgcaptcha/.test(html)) return html;
-  }
+  let directStatus = 0;
+  let readerStatus = 0;
 
-  let status = 0;
-  for (const delay of [0, 3000, 8000]) {
+  // The bot check is intermittent, so alternate direct attempts with the rendering reader.
+  for (const delay of [0, 1500, 4000, 9000]) {
     if (delay) await new Promise((r) => setTimeout(r, delay));
+
+    const direct = await fetch(url + (url.includes('?') ? '&' : '?') + 'nocache=' + Date.now(), { headers: HEADERS });
+    directStatus = direct.status;
+    const html = await direct.text();
+    if (direct.ok && html.length > 2000 && !/sgcaptcha/.test(html)) return html;
+
     const reader = await fetch('https://r.jina.ai/' + url, {
       headers: { 'X-Return-Format': 'html', Accept: 'text/html' },
     });
-    status = reader.status;
+    readerStatus = reader.status;
     if (reader.ok) return await reader.text();
   }
-  throw new Error(`Website unreachable (${direct.status}/${status})`);
+  throw new Error(`Website unreachable (${directStatus}/${readerStatus})`);
 }
 
 function decode(raw) {
@@ -171,7 +174,8 @@ const SOURCES = {
 
 async function syncKey(base44, key) {
   const source = SOURCES[key];
-  const items = source.parse(await fetchPage(source.url));
+  const html = await fetchPage(source.url);
+  const items = source.parse(html);
   if (!items.length) throw new Error(`No items parsed for ${key}`);
 
   const data = {
