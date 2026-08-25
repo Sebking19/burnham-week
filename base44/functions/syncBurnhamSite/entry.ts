@@ -193,6 +193,22 @@ async function syncKey(base44, key) {
   } else {
     await base44.asServiceRole.entities.SiteContent.create(data);
   }
+
+  // New notice board documents also appear as notices on the Notices page.
+  if (key === 'documents' && existing.length) {
+    const seen = new Set((existing[0].items || []).map((i) => i.title));
+    const fresh = items.filter((i) => i.title && !seen.has(i.title));
+    for (const doc of fresh) {
+      await base44.asServiceRole.entities.Announcement.create({
+        title: doc.title,
+        content: doc.url
+          ? `New document on the Official Notice Board:\n${doc.url}`
+          : 'New document added to the Official Notice Board.',
+        author_name: 'Notice Board',
+      });
+    }
+  }
+
   return { count: items.length, changed };
 }
 
