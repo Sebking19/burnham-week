@@ -73,7 +73,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {isAuthenticated && (
-        <header className="fixed top-0 left-0 right-0 z-40 bg-white dark:bg-[#121212]" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+        <header className="app-fixed-bar top-0 left-0 right-0 z-40 bg-white dark:bg-[#121212]" style={{ paddingTop: "env(safe-area-inset-top)" }}>
           <div className="max-w-3xl mx-auto px-4 h-[78px] flex items-center justify-between border-b-2 border-dotted border-[#141B34]/40 dark:border-white/10">
             {SUB_PAGES.includes(currentPageName) && <BackButton />}
             <Link to="/" className="flex items-center gap-3 flex-1 min-w-0">
@@ -118,7 +118,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {isAuthenticated && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-dotted border-[#141B34]/40 dark:bg-[#121212] dark:border-white/10" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <nav className="app-fixed-bar bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-dotted border-[#141B34]/40 dark:bg-[#121212] dark:border-white/10" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
           <div className="max-w-3xl mx-auto h-[74px] flex items-stretch">
             {tabs.map(({ name, icon: Icon, page, path }) => {
               const active = currentPageName === page || (page === "Welcome" && !currentPageName);
