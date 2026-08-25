@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
-import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Megaphone, Trophy, UserCircle2 } from "lucide-react";
+import { Anchor, CalendarDays, CloudSun, Cog, LifeBuoy, Map, Megaphone, Trophy, UserCircle2 } from "lucide-react";
 import NoticeBoardCard from "@/components/home/NoticeBoardCard";
 import LatestNews from "@/components/home/LatestNews";
 import NameReminder from "@/components/home/NameReminder";
@@ -27,6 +27,7 @@ const links = [
   { to: "/Schedule", icon: CalendarDays, title: "Week Schedule", desc: "What's on each day, 29 August to 5 September" },
   { to: "/Forecast", icon: CloudSun, title: "Weather, Wind & Tides", desc: "Forecast for the River Crouch" },
   { to: "/Notices", icon: Megaphone, title: "Notices", desc: "Announcements from the organisers" },
+  { href: "https://www.burnhamweek.com/courses-2/", icon: Map, title: "Courses", desc: "Race courses on the Burnham Week website" },
   { to: "/MyResults", icon: Trophy, title: "My Results", desc: "Your place in the standings, found by your name" },
   { to: "/Profile", icon: UserCircle2, title: "My Profile", desc: "Your name, boat and helm or crew role" },
   { to: "/Help", icon: LifeBuoy, title: "Help", desc: "Who to call if you need a hand" },
@@ -97,10 +98,15 @@ export default function Welcome() {
 
       {/* Links as raised button tiles */}
       <div className="space-y-3">
-        {links.map(({ to, icon: Icon, title, desc }) => (
-          <Link
-            key={to}
-            to={to}
+        {links.map(({ to, href, icon: Icon, title, desc }) => {
+          const Tag = href ? "a" : Link;
+          const props = href
+            ? { href, target: "_blank", rel: "noopener noreferrer" }
+            : { to };
+          return (
+          <Tag
+            key={title}
+            {...props}
             className="home-tile flex items-center gap-4 p-4 group rounded-2xl bg-white dark:bg-[#1A1A1A]"
           >
             <span className="w-12 h-12 rounded-lg bg-[#4C7CF0] flex items-center justify-center shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_2px_0_rgba(20,27,52,0.35)]">
@@ -110,8 +116,9 @@ export default function Welcome() {
               <span className="font-bold text-[#1B2A5B] dark:text-[#8FAEF7] group-hover:underline">{title}</span>
               <span className="text-[#141B34]/70 dark:text-white/70"> — {desc}</span>
             </span>
-          </Link>
-        ))}
+          </Tag>
+          );
+        })}
       </div>
 
       {/* Office times */}
