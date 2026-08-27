@@ -240,11 +240,15 @@ export default async function (req: Request): Promise<Response> {
     } else if (body && body.all) {
       keys = Object.keys(SOURCES);
     } else {
-      // Rotate: refresh whichever block is the most out of date.
+      // Rotate: refresh the most out-of-date block, with notice board, courses and news
+      // weighted so they are checked three times as often as the rest.
+      const WEIGHT = { documents: 3, courses: 3, news: 3 };
       const records = await base44.asServiceRole.entities.SiteContent.list();
       const stamp = {};
       for (const r of records) stamp[r.key] = r.fetched_at || '';
-      const sorted = Object.keys(SOURCES).sort((a, b) => (stamp[a] || '').localeCompare(stamp[b] || ''));
+      const now = Date.now();
+      const score = (k) => (stamp[k] ? (now - new Date(stamp[k]).getTime()) * (WEIGHT[k] || 1) : Infinity);
+      const sorted = Object.keys(SOURCES).sort((a, b) => score(b) - score(a));
       keys = [sorted[0]];
     }
 
