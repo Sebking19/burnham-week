@@ -37,6 +37,8 @@ function decode(raw) {
     .replace(/&nbsp;|&#160;|&#xa0;/gi, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&#8217;|&rsquo;|&#039;|&#39;/g, "'")
+    .replace(/[\u2018\u2019]/g, "'") // curly apostrophes -> straight, so page variants match
+    .replace(/[\u201C\u201D]/g, '"')
     .replace(/&#8211;|&ndash;/g, '–')
     .replace(/&quot;/g, '"')
     .replace(/\s+/g, ' ')

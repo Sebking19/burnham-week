@@ -29,13 +29,21 @@ export default function WebsiteSyncPanel() {
   const refresh = async () => {
     setBusy(true);
     setStatus({});
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const keys = Object.keys(LABELS);
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       setStatus(s => ({ ...s, [key]: "checking" }));
-      // The website's bot check sometimes blocks a page, so retry once.
-      const ok = (await syncOne(key)) || (await syncOne(key));
+      // The website's bot check blocks rapid requests, so retry once after a pause.
+      let ok = await syncOne(key);
+      if (!ok) {
+        await sleep(6000);
+        ok = await syncOne(key);
+      }
       setStatus(s => ({ ...s, [key]: ok ? "done" : "failed" }));
       await load();
+      // Pause between sections so the website never sees a burst of requests.
+      if (i < keys.length - 1) await sleep(4000);
     }
     setBusy(false);
   };
