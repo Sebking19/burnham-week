@@ -199,6 +199,13 @@ async function syncKey(base44, key) {
     const seen = new Set((existing[0].items || []).map((i) => i.title));
     const fresh = items.filter((i) => i.title && !seen.has(i.title));
     for (const doc of fresh) {
+      // The website sometimes serves slightly different page versions, making a document
+      // look "new" again. Never post a notice for a document we've already announced.
+      const already = await base44.asServiceRole.entities.Announcement.filter({
+        title: doc.title,
+        author_name: 'Notice Board',
+      });
+      if (already.length) continue;
       await base44.asServiceRole.entities.Announcement.create({
         title: doc.title,
         content: doc.url

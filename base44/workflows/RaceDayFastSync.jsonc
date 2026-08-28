@@ -1,13 +1,13 @@
 {
   "name": "Race day fast sync",
-  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to midnight, and notifies members when new results or courses appear",
+  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to 11pm, and notifies members when new results or courses appear",
   "trigger": {
     "condition": null,
     "config": {
       "trigger_type": "scheduled",
       "events": [],
       "schedule_mode": "recurring",
-      "cron_expression": "*/15 15-23 * 8,9 *",
+      "cron_expression": "*/15 15-22 * 8,9 *",
       "one_time_date": null,
       "timezone": "Europe/London",
       "interval_value": null,
@@ -22,7 +22,7 @@
     "document": {
       "dsl": "1.0.0",
       "name": "race_day_fast_sync",
-      "version": "1.1",
+      "version": "1.2",
       "namespace": "base44"
     },
     "do": [

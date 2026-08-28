@@ -1,13 +1,13 @@
 {
   "name": "Sync Burnham Week website",
-  "description": "Refreshes the most out-of-date block of official Burnham Week website content every 15 minutes and notifies members when the race courses change",
+  "description": "Refreshes the most out-of-date block of official Burnham Week website content every 15 minutes (quiet between 11pm and 5am) and notifies members when the race courses change",
   "trigger": {
     "condition": null,
     "config": {
       "trigger_type": "scheduled",
       "events": [],
       "schedule_mode": "recurring",
-      "cron_expression": "*/15 * * * *",
+      "cron_expression": "*/15 5-22 * * *",
       "one_time_date": null,
       "timezone": "Europe/London",
       "interval_value": null,
@@ -22,7 +22,7 @@
     "document": {
       "dsl": "1.0.0",
       "name": "sync_burnham_website",
-      "version": "1.2",
+      "version": "1.3",
       "namespace": "base44"
     },
     "do": [
