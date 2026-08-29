@@ -8,20 +8,44 @@ const HEADERS = {
 };
 
 export async function fetchPage(url) {
-  const direct = await fetch(url, { headers: HEADERS });
-  if (direct.ok) {
-    const html = await direct.text();
-    if (!/sgcaptcha/.test(html)) return html;
+  // The bot check is intermittent, so try the site itself a few times before the reader service.
+  let direct = { status: 0 };
+  for (const delay of [0, 1500, 4000]) {
+    if (delay) await new Promise((r) => setTimeout(r, delay));
+    try {
+      direct = await fetch(url, { headers: HEADERS });
+      if (direct.ok) {
+        const html = await direct.text();
+        if (!/sgcaptcha/.test(html)) return html;
+        console.log(`bot check on ${url}`);
+      } else {
+        console.log(`direct ${direct.status} on ${url}`);
+      }
+    } catch (e) {
+      console.log(`direct error on ${url}: ${e.message}`);
+    }
   }
 
+  // Mirrors that fetch the page for us when the bot check keeps blocking our own requests.
+  const mirrors = [
+    { url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url), headers: {} },
+    { url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url), headers: {} },
+    { url: 'https://r.jina.ai/' + url, headers: { 'X-Return-Format': 'html', Accept: 'text/html' } },
+  ];
+
   let status = 0;
-  for (const delay of [0, 3000, 8000]) {
-    if (delay) await new Promise((r) => setTimeout(r, delay));
-    const reader = await fetch('https://r.jina.ai/' + url, {
-      headers: { 'X-Return-Format': 'html', Accept: 'text/html' },
-    });
-    status = reader.status;
-    if (reader.ok) return await reader.text();
+  for (const mirror of mirrors) {
+    try {
+      const reader = await fetch(mirror.url, { headers: mirror.headers });
+      status = reader.status;
+      if (reader.ok) {
+        const html = await reader.text();
+        if (html && !/sgcaptcha/.test(html)) return html;
+      }
+      console.log(`mirror ${status} on ${url}`);
+    } catch (e) {
+      console.log(`mirror error on ${url}: ${e.message}`);
+    }
   }
   throw new Error(`Website unreachable (${direct.status}/${status})`);
 }

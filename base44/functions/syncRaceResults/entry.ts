@@ -50,6 +50,31 @@ function seriesOf(url) {
   return `${SERIES_LABELS[m[2]]} ${m[1]}`;
 }
 
+// The WordPress index page is often blocked by the site's bot check, while the Sailwave
+// result files themselves always load — so the 2026 pages are listed here directly.
+const BASE = 'https://burnhamweek.com/results/2026results/';
+const KNOWN_2026 = [
+  ['2026BH707.htm', '707'],
+  ['2026BHBeastie.htm', 'Beastie'],
+  ['2026BHClass12.htm', 'IRC Class 1 & 2'],
+  ['2026BHClass5.htm', 'Class 5'],
+  ['2026BHClass6.htm', 'Class 6'],
+  ['2026BHDinghyFast.htm', 'Dinghy Fast Handicap'],
+  ['2026BHDinghySlow.htm', 'Dinghy Slow Handicap'],
+  ['2026BHDragon.htm', 'Dragon'],
+  ['2026BHECOD.htm', 'ECOD'],
+  ['2026BHLaser.htm', 'ILCA 4-6-7 and Laser'],
+  ['2026BHOsprey.htm', 'Osprey'],
+  ['2026BHPhantom.htm', 'Phantom'],
+  ['2026BHRBOD.htm', 'RBOD'],
+  ['2026BHRCOD.htm', 'RCOD'],
+  ['2026BHRSElite.htm', 'Elite One Design'],
+  ['2026BHSquib.htm', 'Squib'],
+].map(([file, name]) => {
+  const url = BASE + file;
+  return { url, title: `${name} – ${seriesOf(url)}` };
+});
+
 // Links on the results index that point at a Sailwave results page.
 function parseIndex(html) {
   const out = [];
@@ -160,17 +185,17 @@ export default async function (req: Request): Promise<Response> {
       });
     }
 
-    let entries;
+    // Start from the known 2026 pages, then add anything extra the index lists (if it loads).
+    const entries = [...KNOWN_2026];
+    const seenUrls = new Set(entries.map((e) => e.url));
     try {
-      entries = parseIndex(await fetchPage(indexUrl));
-    } catch (err) {
-      if (isRateLimited(err)) {
-        const minutes = await registerStall(base44, backoff);
-        return Response.json({ ok: true, stalled: true, cooldown_minutes: minutes, changed_count: 0 });
+      for (const e of parseIndex(await fetchPage(indexUrl))) {
+        if (!seenUrls.has(e.url)) {
+          seenUrls.add(e.url);
+          entries.push(e);
+        }
       }
-      throw err;
-    }
-    if (!entries.length) return Response.json({ ok: true, published: false, synced: 0 });
+    } catch { /* index blocked — the known list is enough */ }
 
     // Refresh the pages that are most out of date first, a few per run.
     const stored = await base44.asServiceRole.entities.RaceResult.list();
@@ -181,16 +206,19 @@ export default async function (req: Request): Promise<Response> {
     const results = {};
     const changedClasses = [];
     let stalled = false;
+    let misses = 0;
     for (const entry of entries.slice(0, limit)) {
       try {
         const outcome = await syncOne(base44, entry);
         results[entry.title] = outcome.count;
         if (outcome.changed) changedClasses.push(entry.title);
+        misses = 0;
       } catch (err) {
         results[entry.title] = `failed: ${err.message}`;
-        if (isRateLimited(err)) {
+        // One awkward page shouldn't end the run; several in a row means the site is blocking us.
+        if (isRateLimited(err) && ++misses >= 3) {
           stalled = true;
-          break; // stop hammering the site, cool down instead
+          break;
         }
       }
     }
