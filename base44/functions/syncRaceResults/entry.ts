@@ -2,6 +2,39 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { fetchPage, decode } from '../../shared/burnhamFetch.ts';
 
 const INDEX_URL = 'https://www.burnhamweek.com/results-2026/';
+const BACKOFF_KEY = 'results_sync_backoff';
+
+async function getBackoff(base44) {
+  const rows = await base44.asServiceRole.entities.SettingsConfig.filter({ key: BACKOFF_KEY });
+  if (!rows.length) return { record: null, until: 0, streak: 0 };
+  let parsed = { until: 0, streak: 0 };
+  try {
+    parsed = JSON.parse(rows[0].value);
+  } catch { /* fresh start */ }
+  return { record: rows[0], until: parsed.until || 0, streak: parsed.streak || 0 };
+}
+
+async function setBackoff(base44, record, until, streak) {
+  const value = JSON.stringify({ until, streak });
+  if (record) {
+    await base44.asServiceRole.entities.SettingsConfig.update(record.id, { key: BACKOFF_KEY, value });
+  } else {
+    await base44.asServiceRole.entities.SettingsConfig.create({ key: BACKOFF_KEY, value });
+  }
+}
+
+// Escalating cooldown: 2, 4, 8, then 15 minutes per consecutive stall.
+async function registerStall(base44, backoff) {
+  const streak = backoff.streak + 1;
+  const minutes = Math.min(2 ** streak, 15);
+  const until = Date.now() + minutes * 60 * 1000;
+  await setBackoff(base44, backoff.record, until, streak);
+  return minutes;
+}
+
+function isRateLimited(err) {
+  return /202\/429|unreachable|429/i.test(err.message || '');
+}
 
 // Series codes embedded in the Sailwave file names, e.g. 2025BHSquib.htm
 const SERIES_LABELS = {
@@ -116,7 +149,27 @@ export default async function (req: Request): Promise<Response> {
     const indexUrl = body.index_url || INDEX_URL;
     const limit = Number(body.limit) || 6;
 
-    const entries = parseIndex(await fetchPage(indexUrl));
+    // Throttle: skip the run entirely while cooling down after a rate-limit stall.
+    const backoff = await getBackoff(base44);
+    if (!body.force && Date.now() < backoff.until) {
+      return Response.json({
+        ok: true,
+        skipped: true,
+        cooldown_until: new Date(backoff.until).toISOString(),
+        changed_count: 0,
+      });
+    }
+
+    let entries;
+    try {
+      entries = parseIndex(await fetchPage(indexUrl));
+    } catch (err) {
+      if (isRateLimited(err)) {
+        const minutes = await registerStall(base44, backoff);
+        return Response.json({ ok: true, stalled: true, cooldown_minutes: minutes, changed_count: 0 });
+      }
+      throw err;
+    }
     if (!entries.length) return Response.json({ ok: true, published: false, synced: 0 });
 
     // Refresh the pages that are most out of date first, a few per run.
@@ -127,6 +180,7 @@ export default async function (req: Request): Promise<Response> {
 
     const results = {};
     const changedClasses = [];
+    let stalled = false;
     for (const entry of entries.slice(0, limit)) {
       try {
         const outcome = await syncOne(base44, entry);
@@ -134,7 +188,18 @@ export default async function (req: Request): Promise<Response> {
         if (outcome.changed) changedClasses.push(entry.title);
       } catch (err) {
         results[entry.title] = `failed: ${err.message}`;
+        if (isRateLimited(err)) {
+          stalled = true;
+          break; // stop hammering the site, cool down instead
+        }
       }
+    }
+
+    let cooldownMinutes = 0;
+    if (stalled) {
+      cooldownMinutes = await registerStall(base44, backoff);
+    } else if (backoff.streak > 0) {
+      await setBackoff(base44, backoff.record, 0, 0); // healthy run — reset the throttle
     }
 
     return Response.json({
@@ -142,6 +207,8 @@ export default async function (req: Request): Promise<Response> {
       published: true,
       total_pages: entries.length,
       results,
+      stalled,
+      cooldown_minutes: cooldownMinutes,
       changed_classes: changedClasses,
       changed_count: changedClasses.length,
     });

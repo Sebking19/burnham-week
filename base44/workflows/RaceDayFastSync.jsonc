@@ -1,13 +1,13 @@
 {
   "name": "Race day fast sync",
-  "description": "During Burnham Week race days, refreshes official website content and race standings every 15 minutes from 3pm to 11pm, and notifies members when new results or courses appear",
+  "description": "During Burnham Week race days, checks the race standings every 5 minutes from 9am to 11pm (automatically backing off when the website blocks requests) and notifies members when new results appear. Website content and course notifications are handled by the separate 15-minute sync.",
   "trigger": {
     "condition": null,
     "config": {
       "trigger_type": "scheduled",
       "events": [],
       "schedule_mode": "recurring",
-      "cron_expression": "*/15 15-22 * 8,9 *",
+      "cron_expression": "*/5 9-22 * 8,9 *",
       "one_time_date": null,
       "timezone": "Europe/London",
       "interval_value": null,
@@ -22,69 +22,23 @@
     "document": {
       "dsl": "1.0.0",
       "name": "race_day_fast_sync",
-      "version": "1.2",
+      "version": "2.1",
       "namespace": "base44"
     },
     "do": [
-      {
-        "sync_block": {
-          "call": "invoke_backend_function",
-          "with": {
-            "function_name": "syncBurnhamSite",
-            "args": {}
-          },
-          "then": "check_courses_changed",
-          "x-base44": {
-            "title": "Refresh website content",
-            "description": "Every 15 min on race evenings"
-          }
-        }
-      },
-      {
-        "check_courses_changed": {
-          "switch": [
-            {
-              "when": "${ (.sync_block.changed_keys // []) | index(\"courses\") != null }",
-              "then": "notify_courses"
-            },
-            {
-              "when": "${ true }",
-              "then": "sync_results"
-            }
-          ],
-          "x-base44": {
-            "title": "Courses changed?",
-            "description": "Only notify when course content is new"
-          }
-        }
-      },
-      {
-        "notify_courses": {
-          "call": "invoke_backend_function",
-          "with": {
-            "function_name": "sendCoursesPush",
-            "args": {}
-          },
-          "then": "sync_results",
-          "x-base44": {
-            "title": "Notify about courses",
-            "description": "Push notification about updated courses"
-          }
-        }
-      },
       {
         "sync_results": {
           "call": "invoke_backend_function",
           "with": {
             "function_name": "syncRaceResults",
             "args": {
-              "limit": 10
+              "limit": 6
             }
           },
           "then": "check_for_new_results",
           "x-base44": {
             "title": "Refresh race standings",
-            "description": "Pulls the Sailwave standings tables so members can see their own results"
+            "description": "Every 5 minutes; skips itself while the website is rate-limiting"
           }
         }
       },
