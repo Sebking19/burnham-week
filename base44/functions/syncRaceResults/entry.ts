@@ -54,7 +54,7 @@ function seriesOf(url) {
 function parseIndex(html) {
   const out = [];
   const seen = new Set();
-  for (const m of html.matchAll(/<a[^>]*href="([^"]*\/results\/\d{4}results\/[^"]+\.htm)"[^>]*>([\s\S]*?)<\/a>/gi)) {
+  for (const m of html.matchAll(/<a[^>]*href="([^"]*\/results\/2026results\/[^"]+\.htm)"[^>]*>([\s\S]*?)<\/a>/gi)) {
     const url = m[1].startsWith('http') ? m[1] : 'https://www.burnhamweek.com' + m[1];
     let title = decode(m[2]);
     if (!title || seen.has(url)) continue;
