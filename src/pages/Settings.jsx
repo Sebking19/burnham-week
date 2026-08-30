@@ -4,6 +4,7 @@ import AccessibilityOptions from "@/components/settings/AccessibilityOptions";
 import AdminMonitorPanel from "@/components/settings/AdminMonitorPanel";
 import UserRoleManager from "@/components/settings/UserRoleManager";
 import WebsiteSyncPanel from "@/components/settings/WebsiteSyncPanel";
+import RaceResultsSyncPanel from "@/components/settings/RaceResultsSyncPanel";
 import NotificationPreferences from "@/components/settings/NotificationPreferences";
 import { Link } from "react-router-dom";
 import { ShieldQuestion } from "lucide-react";
@@ -33,6 +34,8 @@ export default function Settings() {
       {isAdmin && <AdminMonitorPanel />}
 
       {isAdmin && <WebsiteSyncPanel />}
+
+      {isAdmin && <RaceResultsSyncPanel />}
 
       <Link
         to="/PrivacyPolicy"
